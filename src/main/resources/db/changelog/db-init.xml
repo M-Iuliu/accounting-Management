@@ -1,0 +1,137 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro
+            http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="emi (generated)" id="1">
+        
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="client"/>
+            </not>
+        </preConditions>
+        
+        <createTable tableName="client">
+            <column autoIncrement="true" name="client_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="client_pkey"/>
+            </column>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="offer_id" type="BIGINT"/>
+            <column name="reservation_id" type="BIGINT"/>
+            <column name="surname" type="VARCHAR(255)"/>
+            <column name="telephone" type="VARCHAR(255)"/>
+        </createTable>
+   </changeSet>
+    
+    <changeSet author="emi (generated)" id="2">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="observation"/>
+            </not>
+        </preConditions>
+        
+        <createTable tableName="observation">
+            <column autoIncrement="true" name="observation_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="observation_pkey"/>
+            </column>
+            <column name="comment" type="VARCHAR(255)"/>
+            <column name="offer_id" type="BIGINT"/>
+        </createTable>
+   </changeSet>
+    
+    <changeSet author="emi (generated)" id="3">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="offer"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="offer">
+            <column autoIncrement="true" name="offer_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="offer_pkey"/>
+            </column>
+            <column name="acquisition_price" type="FLOAT8">
+                <constraints nullable="false"/>
+            </column>
+            <column name="adults_nb" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="advance" type="FLOAT8">
+                <constraints nullable="false"/>
+            </column>
+            <column name="budget" type="FLOAT8">
+                <constraints nullable="false"/>
+            </column>
+            <column name="children_nb" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="client_id" type="BIGINT"/>
+            <column name="commission" type="FLOAT8">
+                <constraints nullable="false"/>
+            </column>
+            <column name="destination" type="VARCHAR(255)"/>
+            <column name="gross_price" type="FLOAT8">
+                <constraints nullable="false"/>
+            </column>
+            <column name="obs_id" type="BIGINT"/>
+            <column name="offer_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="period" type="VARCHAR(255)"/>
+            <column name="status" type="BYTEA"/>
+            <column name="title" type="VARCHAR(255)"/>
+        </createTable>
+   </changeSet>
+    
+    <changeSet author="emi (generated)" id="4">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="provider"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="provider">
+            <column autoIncrement="true" name="provider_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="provider_pkey"/>
+            </column>
+            <column name="provider_name" type="VARCHAR(255)"/>
+        </createTable>
+   </changeSet>
+    
+    <changeSet author="emi (generated)" id="5">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="reservation"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="reservation">
+            <column autoIncrement="true" name="reservation_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="reservation_pkey"/>
+            </column>
+            <column name="children_age" type="VARCHAR(255)"/>
+            <column name="client_id" type="BIGINT"/>
+            <column name="departure_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="destination" type="VARCHAR(255)"/>
+            <column name="hotel" type="VARCHAR(255)"/>
+            <column name="participants" type="VARCHAR(255)"/>
+            <column name="payment_deadline_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="provider_id" type="BIGINT"/>
+            <column name="remaining_cost" type="FLOAT8">
+                <constraints nullable="false"/>
+            </column>
+            <column name="return_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="rooms" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_price" type="FLOAT8">
+                <constraints nullable="false"/>
+            </column>
+            <column name="transport" type="VARCHAR(255)"/>
+        </createTable>
+   </changeSet>
+    
+</databaseChangeLog>
