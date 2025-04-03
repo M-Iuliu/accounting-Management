@@ -1,26 +1,29 @@
-package com.accounting.dto;
+package com.accounting.dto.reservation;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.Date;
-import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ReservationDTO {
-    private long reservationId;
+public class ReservationForm {
 
-    private String name;
-    private List<String> participantsList;
-    private List<Integer> childrenAgeList;
+    @NotNull
+    private Long clientId;
+
+    @NotNull
+    private Long offerId;
+
+    private String participants;
+    private String childrenAge;
     private Date departureDate;
     private Date returnDate;
     private int personsNumber;
     private int rooms;
-    private String telephone;
     private String destination;
     private String hotel;
     private String transport;
@@ -29,4 +32,5 @@ public class ReservationDTO {
     private double remainingCost;
     private Date paymentDeadlineDate;
     private Long providerId;
+
 }

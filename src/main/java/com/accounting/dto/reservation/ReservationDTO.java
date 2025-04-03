@@ -1,42 +1,36 @@
-package com.accounting.entity;
+package com.accounting.dto.reservation;
 
-import jakarta.persistence.*;
+import com.accounting.entity.Client;
+import com.accounting.entity.Offer;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.util.Date;
 import java.util.List;
 
-@Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Reservation {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class ReservationDTO {
+    private long reservationId;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reservationId;
-
-    @ManyToOne
-    @JoinColumn(name = "client_id", nullable = false)
     private Client client;
-
-    @OneToOne
-    @JoinColumn(name = "category_id", nullable = false)
     private Offer offer;
-
     private String participants;
     private String childrenAge;
     private Date departureDate;
     private Date returnDate;
+    private int personsNumber;
     private int rooms;
     private String destination;
     private String hotel;
     private String transport;
     private double totalPrice;
+    private double advance;
     private double remainingCost;
     private Date paymentDeadlineDate;
     private Long providerId;
-
 }

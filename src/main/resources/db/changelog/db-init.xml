@@ -1,56 +1,12 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro
-            http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd
-            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
-    <changeSet author="emi (generated)" id="1">
-        
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="client"/>
-            </not>
-        </preConditions>
-        
-        <createTable tableName="client">
-            <column autoIncrement="true" name="client_id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="client_pkey"/>
-            </column>
-            <column name="email" type="VARCHAR(255)"/>
-            <column name="name" type="VARCHAR(255)"/>
-            <column name="offer_id" type="BIGINT"/>
-            <column name="reservation_id" type="BIGINT"/>
-            <column name="surname" type="VARCHAR(255)"/>
-            <column name="telephone" type="VARCHAR(255)"/>
-        </createTable>
-   </changeSet>
-    
-    <changeSet author="emi (generated)" id="2">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="observation"/>
-            </not>
-        </preConditions>
-        
-        <createTable tableName="observation">
-            <column autoIncrement="true" name="observation_id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="observation_pkey"/>
-            </column>
-            <column name="comment" type="VARCHAR(255)"/>
-            <column name="offer_id" type="BIGINT"/>
-        </createTable>
-   </changeSet>
-    
-    <changeSet author="emi (generated)" id="3">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <!-- ChangeSet 1 -->
+    <changeSet author="emi (generated)" id="1725011854646-1">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="offer"/>
             </not>
         </preConditions>
-
         <createTable tableName="offer">
             <column autoIncrement="true" name="offer_id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="offer_pkey"/>
@@ -70,7 +26,6 @@
             <column name="children_nb" type="INTEGER">
                 <constraints nullable="false"/>
             </column>
-            <column name="client_id" type="BIGINT"/>
             <column name="commission" type="FLOAT8">
                 <constraints nullable="false"/>
             </column>
@@ -78,42 +33,62 @@
             <column name="gross_price" type="FLOAT8">
                 <constraints nullable="false"/>
             </column>
-            <column name="obs_id" type="BIGINT"/>
+            <column name="obs" type="VARCHAR(255)"/>
             <column name="offer_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
             <column name="period" type="VARCHAR(255)"/>
-            <column name="status" type="BYTEA"/>
-            <column name="title" type="VARCHAR(255)"/>
+            <column name="status" type="VARCHAR(255)"/>
+            <column name="client_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
-   </changeSet>
-    
-    <changeSet author="emi (generated)" id="4">
+    </changeSet>
+
+    <!-- ChangeSet 2 -->
+    <changeSet author="emi (generated)" id="1725011854646-2">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="provider"/>
+                <tableExists tableName="client_offer"/>
             </not>
         </preConditions>
-
-        <createTable tableName="provider">
-            <column autoIncrement="true" name="provider_id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="provider_pkey"/>
+        <createTable tableName="client_offer">
+            <column name="client_id" type="BIGINT">
+                <constraints nullable="false"/>
             </column>
-            <column name="provider_name" type="VARCHAR(255)"/>
+            <column name="offer_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
-   </changeSet>
-    
-    <changeSet author="emi (generated)" id="5">
+    </changeSet>
+
+    <!-- ChangeSet 3 -->
+    <changeSet author="emi (generated)" id="1725011854646-3">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="client_reservation"/>
+            </not>
+        </preConditions>
+        <createTable tableName="client_reservation">
+            <column name="client_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reservation_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- ChangeSet 4 -->
+    <changeSet author="emi (generated)" id="1725011854646-4">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="reservation"/>
             </not>
         </preConditions>
-
         <createTable tableName="reservation">
             <column autoIncrement="true" name="reservation_id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="reservation_pkey"/>
             </column>
             <column name="children_age" type="VARCHAR(255)"/>
-            <column name="client_id" type="BIGINT"/>
             <column name="departure_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
             <column name="destination" type="VARCHAR(255)"/>
             <column name="hotel" type="VARCHAR(255)"/>
@@ -131,7 +106,156 @@
                 <constraints nullable="false"/>
             </column>
             <column name="transport" type="VARCHAR(255)"/>
+            <column name="client_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
-   </changeSet>
-    
+    </changeSet>
+
+    <!-- ChangeSet 5 -->
+    <changeSet author="emi (generated)" id="1725011854646-5">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="client_offer" constraintName="uk2eqwusxr5l2kdch8km5kysgs4"/>
+            </not>
+        </preConditions>
+        <addUniqueConstraint columnNames="offer_id" constraintName="uk2eqwusxr5l2kdch8km5kysgs4" tableName="client_offer"/>
+    </changeSet>
+
+    <!-- ChangeSet 6 -->
+    <changeSet author="emi (generated)" id="1725011854646-6">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="client_reservation" constraintName="ukotysbpla6jn81vt7xlxfykwml"/>
+            </not>
+        </preConditions>
+        <addUniqueConstraint columnNames="reservation_id" constraintName="ukotysbpla6jn81vt7xlxfykwml" tableName="client_reservation"/>
+    </changeSet>
+
+    <!-- ChangeSet 7 -->
+    <changeSet author="emi (generated)" id="1725011854646-7">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="reservation" constraintName="ukthc94gafckgl8b61vm151iaoe"/>
+            </not>
+        </preConditions>
+        <addUniqueConstraint columnNames="category_id" constraintName="ukthc94gafckgl8b61vm151iaoe" tableName="reservation"/>
+    </changeSet>
+
+    <!-- ChangeSet 8 -->
+    <changeSet author="emi (generated)" id="1725011854646-8">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="client"/>
+            </not>
+        </preConditions>
+        <createTable tableName="client">
+            <column autoIncrement="true" name="client_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="client_pkey"/>
+            </column>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="surname" type="VARCHAR(255)"/>
+            <column name="telephone" type="VARCHAR(255)"/>
+            <column name="title" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+
+    <!-- ChangeSet 9 -->
+    <changeSet author="emi (generated)" id="1725011854646-9">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="provider"/>
+            </not>
+        </preConditions>
+        <createTable tableName="provider">
+            <column autoIncrement="true" name="provider_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="provider_pkey"/>
+            </column>
+            <column name="provider_name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+
+    <!-- ChangeSet 10 -->
+    <changeSet author="emi (generated)" id="1725011854646-10">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk9nwgw8ryy1w800fijxopcs49d"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="category_id" baseTableName="reservation" constraintName="fk9nwgw8ryy1w800fijxopcs49d" referencedColumnNames="offer_id" referencedTableName="offer"/>
+    </changeSet>
+
+    <!-- ChangeSet 11 -->
+    <changeSet author="emi (generated)" id="1725011854646-11">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fkel15p4h6c9j1vxg6fkme4gg6q"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="offer_id" baseTableName="client_offer" constraintName="fkel15p4h6c9j1vxg6fkme4gg6q" referencedColumnNames="offer_id" referencedTableName="offer"/>
+    </changeSet>
+
+    <!-- ChangeSet 12 -->
+    <changeSet author="emi (generated)" id="1725011854646-12">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fkhkfs1nkrbjrw9pwye72gx0pa8"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="client_id" baseTableName="client_offer" constraintName="fkhkfs1nkrbjrw9pwye72gx0pa8" referencedColumnNames="client_id" referencedTableName="client"/>
+    </changeSet>
+
+    <!-- ChangeSet 13 -->
+    <changeSet author="emi (generated)" id="1725011854646-13">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fkir78635a9kd9d1otmijsn1tb3"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="reservation_id" baseTableName="client_reservation" constraintName="fkir78635a9kd9d1otmijsn1tb3" referencedColumnNames="reservation_id" referencedTableName="reservation"/>
+    </changeSet>
+
+    <!-- ChangeSet 14 -->
+    <changeSet author="emi (generated)" id="1725011854646-14">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fkkrw4foxwkn4qblkyw5lagq6o"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="client_id" baseTableName="client_reservation" constraintName="fkkrw4foxwkn4qblkyw5lagq6o" referencedColumnNames="client_id" referencedTableName="client"/>
+    </changeSet>
+
+    <!-- ChangeSet 15 -->
+    <changeSet author="emi (generated)" id="1725011854646-15">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fkoewar6f18rkn4iptr6da4oysv"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="client_id" baseTableName="reservation" constraintName="fkoewar6f18rkn4iptr6da4oysv" referencedColumnNames="client_id" referencedTableName="client"/>
+    </changeSet>
+
+    <!-- ChangeSet 16 -->
+    <changeSet author="emi (generated)" id="1725011854646-16">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fkqh66wuqh9ub2oqtulwtfnhi1n"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="provider_id" baseTableName="reservation" constraintName="fkqh66wuqh9ub2oqtulwtfnhi1n" referencedColumnNames="provider_id" referencedTableName="provider"/>
+    </changeSet>
+
+    <!-- ChangeSet 17 -->
+    <changeSet id="add-persons-number-column-to-offer" author="yourname">
+        <addColumn tableName="offer">
+            <column name="persons_number" type="INT" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

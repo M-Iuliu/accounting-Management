@@ -1,9 +1,7 @@
 package com.accounting.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
 
@@ -19,11 +17,26 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long clientId;
 
+    private String title;
     private String name;
     private String surname;
     private String telephone;
     private String email;
-    private Long offerId;
-    private Long reservationId;
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "client_offer",
+            joinColumns = @JoinColumn(name = "client_id"),
+            inverseJoinColumns = @JoinColumn(name = "offer_id"))
+    private List<Offer> offerList;
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "client_reservation",
+            joinColumns = @JoinColumn(name = "client_id"),
+            inverseJoinColumns = @JoinColumn(name = "reservation_id"))
+    private List<Reservation> reservationList;
 
 }

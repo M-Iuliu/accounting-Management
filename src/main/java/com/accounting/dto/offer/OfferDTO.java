@@ -1,31 +1,23 @@
-package com.accounting.entity;
+package com.accounting.dto.offer;
 
 import com.accounting.constants.OfferStatusEnum;
-import jakarta.persistence.*;
+import com.accounting.entity.Client;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.*;
 
-import java.util.Date;
-
-@Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Offer {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class OfferDTO {
     private Long offerId;
-
-    @ManyToOne
-    @JoinColumn(name = "client_id", nullable = false)
     private Client client;
-
-    private Date offerDate;
     private int adultsNb;
     private int childrenNb;
-    private int personsNumber;
     private String destination;
     private String period;
     private double budget;

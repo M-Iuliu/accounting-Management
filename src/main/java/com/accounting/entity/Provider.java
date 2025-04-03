@@ -17,6 +17,6 @@ public class Provider {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long providerId;
-
+    private String telephone;
     private String providerName;
 }

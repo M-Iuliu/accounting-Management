@@ -1,21 +1,19 @@
-package com.accounting.dto;
+package com.accounting.dto.offer;
 
-import com.accounting.entity.Observation;
 import lombok.*;
 
-import java.util.List;
+import java.util.Date;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class OfferDTO {
-    private Long offerId;
+public class OfferForm {
 
-    private String title;
-    private String name;
-    private String surname;
+    private Long clientId;
+    private Date offerDate;
+    private Long providerId;
     private int adultsNb;
     private int childrenNb;
     private String destination;
@@ -25,7 +23,7 @@ public class OfferDTO {
     private double advance;
     private double commission;
     private double acquisitionPrice;
-    private Enum status;
-    private List<Observation> obs;
+    private String status;
+    private String obs;
 
 }
