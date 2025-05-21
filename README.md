@@ -1,8 +1,10 @@
-GENERAL INFORMATION:
+# *dTravel* CRM back-end service
+
+## GENERAL INFORMATION:
 
 DianaTravel is a Spring Boot-based travel management application that provides CRUD APIs for managing reservations, providers, offers, and clients. It uses Maven, Spring Boot, and PostgreSQL with Liquibase for database versioning.
 
-Features
+## Features
 
 RESTful API for managing Reservations, Providers, Offers, and Clients
 
@@ -14,64 +16,66 @@ Error handling with custom response messages
 
 Built using Spring Boot 3.x, Maven, and JPA/Hibernate
 
-Prerequisites
+## Prerequisites
 
 Ensure you have the following installed:
 
-Java 17+
+- Java 17+
+- Maven 3.8+
+- PostgreSQL (Ensure database is running)
+- Liquibase
 
-Maven 3.8+
+## 1. INSTALLATION AND SETUP
 
-PostgreSQL (Ensure database is running)
-
-1) INSTALLATION AND SETUP
-
- Clone the repository
+ ### Clone the repository
    https://github.com/M-Iuliu/accounting-Management.git
 
- Configure Database
+ ### Configure Database
 
 Update the application.properties file with your PostgreSQL credentials:
-spring.application.name=Accounting and Management System
+```spring.application.name=Accounting and Management System```
 
-2. DATA SOURCE
+## 2. DATA SOURCE
 
-Set here configurations for the database connection
+### Set here configurations for the database connection
+```
 spring.datasource.url=jdbc:postgresql://localhost:5432/dianaTravel
 spring.datasource.username=postgres
 spring.datasource.password=79.Kcipjxckxq
 spring.datasource.driver-class-name=org.postgresql.Driver
 
-Keep the connection alive if idle for a long time (needed in production)
+# Keep the connection alive if idle for a long time (needed in production)
 spring.datasource.testWhileIdle=true
 spring.datasource.validationQuery=SELECT 1
-
-JPA / HIBERNATE
-
-Show or not log for each sql query
+```
+### JPA / HIBERNATE
+```
+# Show or not log for each sql query
 spring.jpa.show-sql=true
-#Dialect
+
+# Dialect
 spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
 
-Hibernate ddl auto (update):
+# Hibernate ddl auto (update):
 spring.jpa.hibernate.ddl-auto=update
 
-Naming strategy
+# Naming strategy
 spring.jpa.properties.hibernate.naming-strategy = org.hibernate.cfg.ImprovedNamingStrategy
 
-Allows Hibernate to generate SQL optimized for a particular DBMS
+# Allows Hibernate to generate SQL optimized for a particular DBMS
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
-
-LiquiBase
+```
+### LiquiBase
+```
 spring.liquibase.enabled=true
 spring.liquibase.change-log=classpath:db/changelog/db.changelog-master.yaml
-
-3. Build and Run the application:
-
+```
+## 3. Build and Run the application:
+```
    mvn clean install;
    mvn spring-boot:run;
-
-4. API Endpoints
+```
+## 4. API Endpoints
 
 The application provides CRUD operations for the following controllers:
 
