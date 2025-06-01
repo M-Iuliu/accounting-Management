@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/db-init.xml
   - include:
       file: db/changelog/db-updates.xml
+  - include:
+      file: db/changelog/users-table-and-admin.xml
