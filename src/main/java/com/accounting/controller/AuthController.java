@@ -35,7 +35,6 @@ public class AuthController {
     public ResponseEntity<Map<String, String>> login(@RequestBody AuthRequest request) {
         User user = userRepository.findByUsername(request.getUsername()).orElse(null);
 
-        var passEnc = new BCryptPasswordEncoder().encode(request.getPassword());
         if (user != null && passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             String accessToken = jwtService.generateAccessToken(request.getUsername());
             String refreshToken = jwtService.generateRefreshToken(request.getUsername());
