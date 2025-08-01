@@ -1,16 +1,18 @@
 package com.accounting.dto.provider;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProviderDTO {
     private Long providerId;
     private String telephone;
     private String providerName;
+    private String webLink;
+    private String email;
 }

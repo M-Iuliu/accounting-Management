@@ -1,7 +1,8 @@
 package com.accounting.controller;
 
+import com.accounting.dto.pagination.PageDTO;
+import com.accounting.dto.provider.ProviderAddEditForm;
 import com.accounting.dto.provider.ProviderDTO;
-import com.accounting.dto.provider.ProviderAddForm;
 import com.accounting.exeption.ErrorResponse;
 import com.accounting.service.providers.ProviderService;
 import jakarta.persistence.EntityNotFoundException;
@@ -21,18 +22,19 @@ public class ProviderController {
     @Autowired
     private final ProviderService providerService;
 
-    @PostMapping("/saveProvider")
-    public ResponseEntity<ProviderDTO> saveProvider(@RequestBody ProviderAddForm provider){
-        return ResponseEntity.status(HttpStatus.OK).body(providerService.saveProvider(provider));
+    @PostMapping()
+    public ResponseEntity<ProviderDTO> saveProvider(@RequestBody ProviderAddEditForm provider) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(providerService.saveProvider(provider));
     }
 
-    @GetMapping("/getProviderByFilters")
-    public ResponseEntity<?> getProviderByFilters(@RequestParam String input){
+    @GetMapping()
+    public ResponseEntity<?> getProviderByFilters(@RequestParam String input,
+                                                  @RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "5") int size) {
         try {
-            // Call the service method to get the ClientDTO by filters
-            ProviderDTO providerDTO = providerService.getProviderByFilters(input);
+            PageDTO providerDTO = providerService.getProviderByFilters(input, page, size);
 
-            // Return a successful response with the ProviderDTO if found
             return ResponseEntity.ok(providerDTO);
 
         } catch (EntityNotFoundException e) {
@@ -43,12 +45,12 @@ public class ProviderController {
         }
     }
 
-    @GetMapping("/getProvider/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getProvider(@PathVariable Long id){
         try {
-            ProviderDTO providerDTO = providerService.getProviderById(id);
+            ProviderDTO provider = providerService.getProviderDtoById(id);
 
-            return ResponseEntity.ok(providerDTO);
+            return ResponseEntity.ok(provider);
 
         } catch (EntityNotFoundException e) {
             // If the provider is not found, return a 404 status with an error message
@@ -58,7 +60,7 @@ public class ProviderController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProvider(@PathVariable Long id) {
         try {
             providerService.deleteProviderById(id);
@@ -74,8 +76,8 @@ public class ProviderController {
         }
     }
 
-    @PutMapping("/editProvider/{id}")
-    public ResponseEntity<?> editProvider(@PathVariable Long id, @RequestBody ProviderAddForm updatedProvider) {
+    @PutMapping("/{id}")
+    public ResponseEntity<?> editProvider(@PathVariable Long id, @RequestBody ProviderAddEditForm updatedProvider) {
         try {
             ProviderDTO updatedProviderDTO = providerService.editProvider(id, updatedProvider);
 
@@ -88,7 +90,5 @@ public class ProviderController {
                     .body(new ErrorResponse("Provider not found", HttpStatus.NOT_FOUND.value()));
         }
     }
-
-
 
 }

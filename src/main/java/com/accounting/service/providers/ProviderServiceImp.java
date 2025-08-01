@@ -1,77 +1,80 @@
 package com.accounting.service.providers;
 
-import com.accounting.dto.provider.ProviderAddForm;
+import com.accounting.dto.pagination.PageDTO;
+import com.accounting.dto.pagination.PaginationDTO;
+import com.accounting.dto.provider.ProviderAddEditForm;
 import com.accounting.dto.provider.ProviderDTO;
-import com.accounting.entity.Offer;
 import com.accounting.entity.Provider;
-import com.accounting.exeption.OfferNotFoundException;
 import com.accounting.repository.ProviderRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
+
+import static com.accounting.service.providers.ProviderServiceHelper.mapProviderToDTO;
+import static com.accounting.service.providers.ProviderServiceHelper.updateProvider;
 
 @Service
 public class ProviderServiceImp implements ProviderService{
 
     private final ProviderRepository providerRepository;
-    private final ProviderServiceHelper providerServiceHelper;
 
-    public ProviderServiceImp(ProviderRepository providerRepository, ProviderServiceHelper providerServiceHelper) {
+    public ProviderServiceImp(ProviderRepository providerRepository) {
         this.providerRepository = providerRepository;
-        this.providerServiceHelper = providerServiceHelper;
     }
 
-
-    public ProviderDTO saveProvider(ProviderAddForm providerAddForm) {
-        // Mapping
-        Provider provider = providerServiceHelper.mapProviderForm(providerAddForm);
-        ProviderDTO providerDTO = providerServiceHelper.mapProviderToDTO(provider);
-
-        // Save to the database
-        provider = providerRepository.save(provider);
-
-        // Return
-        return providerDTO;
+    public ProviderDTO saveProvider(ProviderAddEditForm providerAddEditForm) {
+        Provider provider = ProviderServiceHelper.mapProviderForm(providerAddEditForm);
+        return mapProviderToDTO(providerRepository.save(provider));
     }
 
-    public ProviderDTO getProviderByFilters(String input) {
-        Provider myProvider = providerRepository.findByFilter(input)
-                .orElseThrow(() -> new EntityNotFoundException("Provider not found with given input: " + input));
-
-        return providerServiceHelper.mapProviderToDTO(myProvider);
+    public Provider findById(Long id) {
+        return providerRepository.findById(id).orElseThrow((() -> new EntityNotFoundException("Provider not found")));
     }
 
-    public ProviderDTO getProviderById(Long id) {
-        Provider provider = providerRepository.findById(id).orElse(null);
+    public ProviderDTO getProviderDtoById(Long id) {
+        return mapProviderToDTO(findById(id));
+    }
 
-        if (provider == null){
-            throw new EntityNotFoundException("Provider not found");
-        }
+    public PageDTO getProviderByFilters(String input, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Provider> providerPage = providerRepository.findByFilter(input, pageable);
 
-        return providerServiceHelper.mapProviderToDTO(provider);
+        List<ProviderDTO> providerDTOList = providerPage.getContent()
+
+                .stream()
+                .map(ProviderServiceHelper::mapProviderToDTO)
+                .toList();
+
+        PaginationDTO pagination = new PaginationDTO(
+                providerPage.getTotalElements(),
+                providerPage.getSize(),
+                List.of(5, 10, 20),
+                providerPage.getNumber()
+        );
+
+        return new PageDTO<>(providerDTOList, pagination);
+    }
+
+    public ProviderDTO editProvider(Long id, ProviderAddEditForm updateDto) {
+        Provider provider = findById(id);
+        updateProvider(updateDto, provider);
+        return mapProviderToDTO(providerRepository.save(provider));
     }
 
     public void deleteProviderById(Long id) {
-        if (!providerRepository.existsById(id)) {
-            throw new EntityNotFoundException("Provider with id " + id + " not found");
-        }
-        providerRepository.deleteById(id);
+        Provider provider = findById(id);
+        provider.setIsDeleted(Boolean.TRUE);
+        provider.setDeletionDate(new Date());
+        providerRepository.save(provider);
     }
 
-    public ProviderDTO editProvider(Long id, ProviderAddForm updatedProvider) {
-        // Retrieve the existing provider by ID
-        Provider existingProvider = providerRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Provider not found"));
-
-        // Update the fields of the existing provider with the new data
-        existingProvider.setProviderId(updatedProvider.getProviderId());
-        existingProvider.setProviderName(updatedProvider.getProviderName());
-        // Add other fields to update as needed
-
-        // Save the updated provider back to the database
-        Provider savedProvider = providerRepository.save(existingProvider);
-
-        // Convert the saved entity to a DTO and return
-        return providerServiceHelper.mapProviderToDTO(savedProvider);
+    public ProviderDTO mapToDto(Provider provider) {
+        return mapProviderToDTO(provider);
     }
 
 }

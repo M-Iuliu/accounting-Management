@@ -1,18 +1,24 @@
 package com.accounting.service.providers;
 
-import com.accounting.dto.provider.ProviderAddForm;
+import com.accounting.dto.pagination.PageDTO;
+import com.accounting.dto.provider.ProviderAddEditForm;
 import com.accounting.dto.provider.ProviderDTO;
+import com.accounting.entity.Provider;
 
 
 public interface ProviderService {
 
-    public ProviderDTO saveProvider(ProviderAddForm provider);
+    ProviderDTO saveProvider(ProviderAddEditForm provider);
 
-    ProviderDTO getProviderById(Long id);
+    Provider findById(Long id);
+
+    ProviderDTO getProviderDtoById(Long id);
 
     void deleteProviderById(Long id);
 
-    ProviderDTO editProvider(Long id, ProviderAddForm updatedProvider);
+    ProviderDTO editProvider(Long id, ProviderAddEditForm updatedProvider);
 
-    ProviderDTO getProviderByFilters(String input);
+    PageDTO getProviderByFilters(String input, int page, int size);
+
+    ProviderDTO mapToDto(Provider provider);
 }
