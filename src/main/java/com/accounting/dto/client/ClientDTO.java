@@ -1,6 +1,5 @@
 package com.accounting.dto.client;
 
-import com.accounting.dto.offer.OfferDTO;
 import com.accounting.entity.Offer;
 import com.accounting.entity.Reservation;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -22,6 +21,7 @@ public class ClientDTO {
     private String surname;
     private String telephone;
     private String email;
+    private String obs;
     private List<Offer> offerList;
     private List<Reservation> reservationList;
 

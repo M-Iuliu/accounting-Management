@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ClientForm {
+public class ClientAddEditForm {
 
     private String name;
     private String title;

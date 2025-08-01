@@ -1,6 +1,6 @@
 package com.accounting.controller;
 
-import com.accounting.dto.client.ClientForm;
+import com.accounting.dto.client.ClientAddEditForm;
 import com.accounting.dto.client.ClientDTO;
 import com.accounting.dto.pagination.PageDTO;
 import com.accounting.entity.Client;
@@ -15,8 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @Validated
 @RestController
 @RequestMapping("/client")
@@ -26,12 +24,12 @@ public class ClientController {
     @Autowired
     private final ClientService clientService;
 
-    @GetMapping("/getClients")
-    public ResponseEntity<?> getClients(
+    @GetMapping("/")
+    public ResponseEntity<?> getClients(@RequestParam String input,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
         try {
-            PageDTO clientWithPagination = clientService.getClients(page, size);
+            PageDTO clientWithPagination = clientService.getClients(input, page, size);
             return ResponseEntity.ok(clientWithPagination);
         } catch (EntityNotFoundException e) {
             return ResponseEntity
@@ -44,46 +42,15 @@ public class ClientController {
         }
     }
 
-    @GetMapping("/getClientByFilters")
-    public ResponseEntity<?> getClientByFilters(@RequestParam String input) {
-        try {
-            // Call the service method to get the ClientDTO by filters
-            ClientDTO clientDTO = clientService.getClientByFilters(input);
-
-            // Return a successful response with the ClientDTO if found
-            return ResponseEntity.ok(clientDTO);
-
-        } catch (EntityNotFoundException | ClientNotFoundException e) {
-            // Handle both exceptions similarly and return a 404 response
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new ErrorResponse("Client not found", HttpStatus.NOT_FOUND.value()));
-        }
-    }
-
-    @PostMapping("/saveClient")
-    public ResponseEntity<Client> saveClient(@RequestBody ClientForm client){
+    @PostMapping("/")
+    public ResponseEntity<Client> saveClient(@RequestBody ClientAddEditForm client){
         return ResponseEntity.status(HttpStatus.CREATED).body(clientService.saveClient(client));
     }
 
-    @PutMapping("/updateClient/{id}")
-    public ResponseEntity<?> updateClient(@PathVariable Long id, @RequestBody ClientForm client){
-        try{
-            ClientDTO clientDTO = clientService.editClient(id, client);
-
-            return ResponseEntity.ok(clientDTO);
-        } catch (EntityNotFoundException | ClientNotFoundException e) {
-            // If the client is not found, return a 404 status with an error message
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new ErrorResponse("Client not found", HttpStatus.NOT_FOUND.value()));
-        }
-    }
-
-    @PatchMapping("/patchClient/{id}")
-    public ResponseEntity<?> patchUpdateClient(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> patchClient(@PathVariable Long id, @RequestBody ClientAddEditForm updateDto) {
         try {
-            ClientDTO updatedClient = clientService.patchClient(id, updates);
+            ClientDTO updatedClient = clientService.patchClient(id, updateDto);
             return ResponseEntity.ok(updatedClient);
         } catch (EntityNotFoundException e) {
             return ResponseEntity
@@ -96,7 +63,7 @@ public class ClientController {
         }
     }
 
-    @DeleteMapping("/deleteClient/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteClient(@PathVariable Long id) {
         try {
             // Attempt to delete the client by calling the service layer
@@ -105,11 +72,12 @@ public class ClientController {
             // Return a 204 No Content status on successful deletion
             return ResponseEntity.noContent().build();
 
-        } catch (EntityNotFoundException e) {
+        } catch (ClientNotFoundException e) {
             // If the client is not found, return a 404 status with an error message
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("Client not found", HttpStatus.NOT_FOUND.value()));
+
         }
     }
 

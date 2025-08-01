@@ -1,8 +1,9 @@
 package com.accounting.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -22,21 +23,31 @@ public class Client {
     private String surname;
     private String telephone;
     private String email;
+    private String obs;
 
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "client_offer",
-            joinColumns = @JoinColumn(name = "client_id"),
-            inverseJoinColumns = @JoinColumn(name = "offer_id"))
+    private Boolean isDeleted;
+    private Date deletionDate; //TODO: to add Auditable to all classes
+
+//    @JsonIgnore
+//    @OneToMany(cascade = CascadeType.ALL)
+//    @JoinTable(
+//            name = "client_offer",
+//            joinColumns = @JoinColumn(name = "client_id"),
+//            inverseJoinColumns = @JoinColumn(name = "offer_id"))
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Offer> offerList;
 
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "client_reservation",
-            joinColumns = @JoinColumn(name = "client_id"),
-            inverseJoinColumns = @JoinColumn(name = "reservation_id"))
+//    @JsonIgnore
+//    @OneToMany(cascade = CascadeType.ALL)
+//    @JoinTable(
+//            name = "client_reservation",
+//            joinColumns = @JoinColumn(name = "client_id"),
+//            inverseJoinColumns = @JoinColumn(name = "reservation_id"))
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservationList;
+
+    public String getFullName(){
+        return this.name + " " + this.surname;
+    }
 
 }
