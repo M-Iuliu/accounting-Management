@@ -23,9 +23,9 @@ public class Offer {
     private Client client;
 
     private Date offerDate;
-    private int adultsNb;
-    private int childrenNb;
-    private int personsNumber;
+    private int adultsNo;
+    private int childrenNo;
+    //    private int personsNumber;
     private String destination;
     private String period;
     private double budget;
@@ -36,6 +36,9 @@ public class Offer {
 
     @Enumerated(EnumType.STRING)
     private OfferStatusEnum status;
+
+    private Boolean isDeleted;
+    private Date deletionDate; //TODO: to add Auditable to all classes
 
     private String obs;
 

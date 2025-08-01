@@ -23,7 +23,6 @@ public class OfferForm {
     private double advance;
     private double commission;
     private double acquisitionPrice;
-    private String status;
     private String obs;
 
 }
