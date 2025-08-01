@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,12 +19,12 @@ public class ReservationForm {
     @NotNull
     private Long offerId;
 
-    private String participants;
-    private String childrenAge;
+    private List<ReservationParticipantDTO> participants;
+    //    private String childrenAge;
     private Date departureDate;
     private Date returnDate;
     private int personsNumber;
-    private int rooms;
+    private int roomNo;
     private String destination;
     private String hotel;
     private String transport;

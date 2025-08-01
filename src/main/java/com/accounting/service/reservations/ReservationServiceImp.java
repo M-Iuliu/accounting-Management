@@ -1,18 +1,21 @@
 package com.accounting.service.reservations;
 
-import com.accounting.dto.offer.OfferDTO;
 import com.accounting.dto.pagination.PageDTO;
 import com.accounting.dto.pagination.PaginationDTO;
 import com.accounting.dto.reservation.ReservationDTO;
 import com.accounting.dto.reservation.ReservationForm;
-import com.accounting.entity.Client;
-import com.accounting.entity.Offer;
+import com.accounting.dto.reservation.ReservationPatchDTO;
+import com.accounting.dto.reservation.ReservationShortDTO;
 import com.accounting.entity.Provider;
 import com.accounting.entity.Reservation;
+import com.accounting.entity.enums.ContextType;
 import com.accounting.exeption.ClientNotFoundException;
 import com.accounting.repository.ReservationRepository;
 import com.accounting.service.clients.ClientService;
+import com.accounting.service.comment.CommentService;
+import com.accounting.service.fileupload.FileUploadService;
 import com.accounting.service.offers.OfferService;
+import com.accounting.service.providers.ProviderService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,60 +23,78 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Field;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Date;
+import java.util.List;
+
+import static com.accounting.service.reservations.ReservationServiceHelper.mapToReservationParticipant;
 
 @Service
-public class ReservationServiceImp implements  ReservationService{
+public class ReservationServiceImp implements ReservationService {
 
-    private final ReservationServiceHelper helper;
+    private final ReservationServiceHelper reservationServiceHelper;
     private final ReservationRepository reservationRepository;
     private final ClientService clientService;
     private final OfferService offerService;
+    private final ProviderService providerService;
+    private final CommentService commentService;
+    private final FileUploadService fileUploadService;
 
-    public ReservationServiceImp(ReservationServiceHelper helper, ReservationRepository reservationRepository, ClientService clientService, OfferService offerService) {
-        this.helper = helper;
+    public ReservationServiceImp(ReservationServiceHelper reservationServiceHelper, ReservationRepository reservationRepository, ClientService clientService,
+                                 OfferService offerService, ProviderService providerService, CommentService commentService, FileUploadService fileUploadService) {
+        this.reservationServiceHelper = reservationServiceHelper;
         this.reservationRepository = reservationRepository;
         this.clientService = clientService;
         this.offerService = offerService;
+        this.providerService = providerService;
+        this.commentService = commentService;
+        this.fileUploadService = fileUploadService;
     }
+
     @Transactional
-    public ReservationDTO createReservation(ReservationForm reservationForm) {
-        // Retrieve Client and Offer entities using their IDs
-        Client client = clientService.findById(reservationForm.getClientId());
-        Offer offer = offerService.findById(reservationForm.getOfferId());
+    public ReservationDTO createReservation(ReservationForm reservationForm) throws ClientNotFoundException {
+        Reservation reservation = ReservationServiceHelper.mapReservationFormToEntity(reservationForm);
+        reservation.setOffer(offerService.findOfferById(reservationForm.getOfferId()));
+        reservation.setClient(clientService.findById(reservationForm.getClientId()));
+        reservation.setProvider(providerService.findById(reservationForm.getProviderId()));
 
-        offer.setAdvance(reservationForm.getAdvance());
-        offer.setPersonsNumber(reservationForm.getPersonsNumber());
+        reservation.setParticipants(
+                mapToReservationParticipant(reservation, reservationForm.getParticipants()));
 
-        Reservation reservation = helper.mapFromForm(reservationForm, client, offer);
-        reservationRepository.save(reservation);
-        return helper.mapToDTO(reservation);
+        Reservation saved = reservationRepository.save(reservation);
+
+        ReservationDTO dto = reservationServiceHelper.mapEntityToReservationDTO(saved);
+        dto.setClient(clientService.mapToShortDto(saved.getClient()));
+        dto.setProviderDTO(providerService.mapToDto(saved.getProvider()));
+        dto.setCommentList(commentService.getComments(ContextType.RESERVATION, saved.getReservationId()));
+
+        return dto;
     }
 
-    public List <ReservationDTO> getReservationsByFilters(String input) {
-        List<Reservation> myReservations = reservationRepository.findByFilter(input);
-        List<ReservationDTO> reservationDTOList = new ArrayList<>();
-
-        if (myReservations.isEmpty()) {
-            throw new EntityNotFoundException("No reservations found for client with given input: " + input);
-        }
-
-        for (Reservation reservation : myReservations) {
-            reservationDTOList.add(helper.mapToDTO(reservation));
-        }
-
-        return reservationDTOList;
+    public Reservation findById(Long reservationId) {
+        return reservationRepository.findById(reservationId).orElseThrow(() ->
+                new EntityNotFoundException("No reservations found for reservationId: " + reservationId));
     }
 
-    public PageDTO getReservations(int page, int size) {
+    public ReservationDTO getReservation(Long reservationId) {
+        Reservation reservation = findById(reservationId);
+        ReservationDTO reservationDTO = reservationServiceHelper.mapEntityToReservationDTO(reservation);
+        reservationDTO.setClient(clientService.mapToShortDto(reservation.getClient()));
+        return reservationDTO;
+    }
+
+    public PageDTO getReservations(String input, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Reservation> reservationPage = reservationRepository.findAll(pageable);
+        Page<Reservation> reservationPage;
 
-        List<ReservationDTO> reservationList = reservationPage.getContent()
+        if (input == null || input.isBlank()) {
+            reservationPage = reservationRepository.findAll(pageable);
+        } else {
+            reservationPage = reservationRepository.findByNameOrPhone(input.trim(), pageable);
+        }
+
+        List<ReservationShortDTO> reservationList = reservationPage.getContent()
                 .stream()
-                .map(helper::mapToDTO)
+                .map(reservationServiceHelper::mapEntityToReservationShortDTO)
                 .toList();
 
         PaginationDTO pagination = new PaginationDTO(
@@ -84,73 +105,33 @@ public class ReservationServiceImp implements  ReservationService{
         );
 
         return new PageDTO<>(reservationList, pagination);
-
     }
 
-    public ReservationDTO editReservation(Long id, ReservationForm reservationForm) {
-        // get client from DB
-        Reservation reservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("No Reservation with id found: " + id));
+    @Transactional
+    public ReservationDTO patchReservation(Long id, ReservationPatchDTO patch) {
+        Reservation reservation = findById(id);
 
-        Client client = clientService.findById(reservationForm.getClientId());
-        Offer offer = offerService.findById(reservationForm.getOfferId());
+        ReservationServiceHelper.patchReservation(patch, reservation);
 
-        //map from form
-        reservation = helper.mapFromForm(reservationForm, client, offer);
-
-        // Save to the database
-        reservation = reservationRepository.save(reservation);
-
-        // Return
-        return helper.mapToDTO(reservation);
-    }
-
-    public ReservationDTO patchReservation(Long id, Map<String, Object> updates) throws EntityNotFoundException {
-        // Fetch the existing Reservation, throw exception if not found
-        Reservation reservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Reservation not found with id: " + id));
-
-        // Get all fields of Reservation class
-        Set<String> reservationKeys = Arrays.stream(Reservation.class.getDeclaredFields())
-                .map(Field::getName)
-                .collect(Collectors.toSet());
-
-        // Iterate over the updates map
-        for (String key : updates.keySet()) {
-            if (reservationKeys.contains(key)) {
-                try {
-                    Field field = Reservation.class.getDeclaredField(key);
-                    field.setAccessible(true);
-
-                    Object value = updates.get(key);
-
-                    // Handle special cases for associations (Client & Offer)
-                    if (key.equals("client") && value instanceof Long) {
-                        reservation.setClient(clientService.findById((Long) value));
-                    } else if (key.equals("offer") && value instanceof Long) {
-                        reservation.setOffer(offerService.findById((Long) value));
-                    } else {
-                        // Set the field value dynamically
-                        field.set(reservation, value);
-                    }
-                } catch (NoSuchFieldException | IllegalAccessException e) {
-                    throw new RuntimeException("Failed to update field: " + key, e);
-                }
-            }
+        if (patch.getProviderId() != null) {
+            Provider provider = providerService.findById(patch.getProviderId());
+            reservation.setProvider(provider);
         }
 
-        // Save the updated Reservation
         reservationRepository.save(reservation);
-
-        // Convert to DTO and return
-        return helper.mapToDTO(reservation);
+        return reservationServiceHelper.mapEntityToReservationDTO(reservation);
     }
 
     public void deleteReservationById(Long id) {
-        if (!reservationRepository.existsById(id)) {
-            throw new EntityNotFoundException("Reservation with id " + id + " not found");
-        }
-        reservationRepository.deleteById(id);
+//        if (!reservationRepository.existsById(id)) {
+//            throw new EntityNotFoundException("Reservation with id " + id + " not found");
+//        }
+//        reservationRepository.deleteById(id);
+
+        Reservation reservation = findById(id);
+        reservation.setIsDeleted(Boolean.TRUE);
+        reservation.setDeletionDate(new Date());
+        reservationRepository.save(reservation);
     }
 
 }
