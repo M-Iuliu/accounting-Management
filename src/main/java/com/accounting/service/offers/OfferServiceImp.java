@@ -93,7 +93,7 @@ public class OfferServiceImp implements OfferService{
 
         if (updateDto.getStatus().equalsIgnoreCase(OfferStatusEnum.CASTIGAT.name())
                 && offer.getStatus().name().equalsIgnoreCase(OfferStatusEnum.OFERTAT.name())) {
-            reservationService.createReservation(updateDto.getReservationDetails());
+            reservationService.createReservation(updateDto.getReservationDetails(), offer);
             offer.setAdvance(updateDto.getReservationDetails().getAdvance());
             offer.setStatus(OfferStatusEnum.CASTIGAT);
             offerRepository.save(offer);

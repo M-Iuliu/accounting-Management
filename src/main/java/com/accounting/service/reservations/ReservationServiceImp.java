@@ -6,6 +6,7 @@ import com.accounting.dto.reservation.ReservationDTO;
 import com.accounting.dto.reservation.ReservationForm;
 import com.accounting.dto.reservation.ReservationPatchDTO;
 import com.accounting.dto.reservation.ReservationShortDTO;
+import com.accounting.entity.Offer;
 import com.accounting.entity.Provider;
 import com.accounting.entity.Reservation;
 import com.accounting.entity.enums.ContextType;
@@ -13,8 +14,6 @@ import com.accounting.exeption.ClientNotFoundException;
 import com.accounting.repository.ReservationRepository;
 import com.accounting.service.clients.ClientService;
 import com.accounting.service.comment.CommentService;
-import com.accounting.service.fileupload.FileUploadService;
-import com.accounting.service.offers.OfferService;
 import com.accounting.service.providers.ProviderService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
@@ -34,26 +33,22 @@ public class ReservationServiceImp implements ReservationService {
     private final ReservationServiceHelper reservationServiceHelper;
     private final ReservationRepository reservationRepository;
     private final ClientService clientService;
-    private final OfferService offerService;
     private final ProviderService providerService;
     private final CommentService commentService;
-    private final FileUploadService fileUploadService;
 
-    public ReservationServiceImp(ReservationServiceHelper reservationServiceHelper, ReservationRepository reservationRepository, ClientService clientService,
-                                 OfferService offerService, ProviderService providerService, CommentService commentService, FileUploadService fileUploadService) {
+    public ReservationServiceImp(ReservationServiceHelper reservationServiceHelper, ReservationRepository reservationRepository,
+                                 ClientService clientService, ProviderService providerService, CommentService commentService) {
         this.reservationServiceHelper = reservationServiceHelper;
         this.reservationRepository = reservationRepository;
         this.clientService = clientService;
-        this.offerService = offerService;
         this.providerService = providerService;
         this.commentService = commentService;
-        this.fileUploadService = fileUploadService;
     }
 
     @Transactional
-    public ReservationDTO createReservation(ReservationForm reservationForm) throws ClientNotFoundException {
+    public ReservationDTO createReservation(ReservationForm reservationForm, Offer offer) throws ClientNotFoundException {
         Reservation reservation = ReservationServiceHelper.mapReservationFormToEntity(reservationForm);
-        reservation.setOffer(offerService.findOfferById(reservationForm.getOfferId()));
+        reservation.setOffer(offer);
         reservation.setClient(clientService.findById(reservationForm.getClientId()));
         reservation.setProvider(providerService.findById(reservationForm.getProviderId()));
 

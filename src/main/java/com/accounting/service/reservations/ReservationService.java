@@ -4,10 +4,11 @@ import com.accounting.dto.pagination.PageDTO;
 import com.accounting.dto.reservation.ReservationDTO;
 import com.accounting.dto.reservation.ReservationForm;
 import com.accounting.dto.reservation.ReservationPatchDTO;
+import com.accounting.entity.Offer;
 import com.accounting.exeption.ClientNotFoundException;
 
 public interface ReservationService {
-    ReservationDTO createReservation(ReservationForm reservationForm) throws ClientNotFoundException;
+    ReservationDTO createReservation(ReservationForm reservationForm, Offer offer) throws ClientNotFoundException;
 
     ReservationDTO getReservation(Long reservationId);
 
