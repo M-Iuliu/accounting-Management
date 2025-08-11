@@ -24,8 +24,8 @@ public class ClientController {
     @Autowired
     private final ClientService clientService;
 
-    @GetMapping("/")
-    public ResponseEntity<?> getClients(@RequestParam String input,
+    @GetMapping()
+    public ResponseEntity<?> getClients(@RequestParam(required = false) String input,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
         try {
@@ -42,7 +42,7 @@ public class ClientController {
         }
     }
 
-    @PostMapping("/")
+    @PostMapping()
     public ResponseEntity<Client> saveClient(@RequestBody ClientAddEditForm client){
         return ResponseEntity.status(HttpStatus.CREATED).body(clientService.saveClient(client));
     }
