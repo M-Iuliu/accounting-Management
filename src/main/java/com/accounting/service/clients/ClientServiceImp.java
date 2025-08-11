@@ -28,6 +28,7 @@ public class ClientServiceImp implements ClientService{
     public Client findById(Long id) throws ClientNotFoundException {
         return clientRepository.findById(id)
                 .orElseThrow(() -> new ClientNotFoundException("Client not found with ID: " + id));
+        //TODO: Throw error if client is inactive
     }
 
     public PageDTO getClients(String input, int page, int size) {

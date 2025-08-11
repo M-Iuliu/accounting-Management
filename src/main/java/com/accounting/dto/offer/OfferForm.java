@@ -13,7 +13,6 @@ public class OfferForm {
 
     private Long clientId;
     private Date offerDate;
-    private Long providerId;
     private int adultsNb;
     private int childrenNb;
     private String destination;

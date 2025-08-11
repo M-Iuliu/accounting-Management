@@ -57,7 +57,12 @@ public class OfferServiceImp implements OfferService{
 
     public PageDTO getOffers(String input, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Offer> offerPage = offerRepository.findByFilter(input, pageable);
+        Page<Offer> offerPage;
+        if (input == null || input.isBlank()) {
+            offerPage = offerRepository.findAllActiveClients(pageable);
+        } else {
+            offerPage = offerRepository.findByFilter(input.trim(), pageable);
+        }
 
         List<OfferShortDTO> offersList = offerPage.getContent()
                 .stream()

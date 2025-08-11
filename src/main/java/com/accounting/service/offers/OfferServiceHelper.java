@@ -7,6 +7,8 @@ import com.accounting.dto.offer.OfferShortDTO;
 import com.accounting.entity.Offer;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class OfferServiceHelper {
 
@@ -57,7 +59,7 @@ public class OfferServiceHelper {
 
     public Offer mapOfferFormToOffer(OfferForm input){
         Offer output = new Offer();
-        output.setOfferDate(input.getOfferDate());
+        output.setOfferDate(input.getOfferDate() != null ? input.getOfferDate() : new Date());
         output.setAdultsNo(input.getAdultsNb());
         output.setChildrenNo(input.getChildrenNb());
         output.setDestination(input.getDestination());
