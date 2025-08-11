@@ -42,8 +42,8 @@ public class OfferController {
         }
     }
 
-    @GetMapping("/")
-    public ResponseEntity<?> getOffers(@RequestParam String input,
+    @GetMapping()
+    public ResponseEntity<?> getOffers(@RequestParam(required = false) String input,
                                        @RequestParam(defaultValue = "0") int page,
                                        @RequestParam(defaultValue = "5") int size) {
         try {
@@ -60,7 +60,7 @@ public class OfferController {
         }
     }
 
-    @PostMapping("/")
+    @PostMapping()
     public ResponseEntity<OfferDTO> saveOffer(@RequestBody @Valid OfferForm offerForm) throws ClientNotFoundException {
         return ResponseEntity.status(HttpStatus.CREATED).body(offerService.createOffer(offerForm));
     }

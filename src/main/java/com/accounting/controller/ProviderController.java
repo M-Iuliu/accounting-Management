@@ -29,7 +29,7 @@ public class ProviderController {
     }
 
     @GetMapping()
-    public ResponseEntity<?> getProviderByFilters(@RequestParam String input,
+    public ResponseEntity<?> getProviderByFilters(@RequestParam(required = false) String input,
                                                   @RequestParam(defaultValue = "0") int page,
                                                   @RequestParam(defaultValue = "5") int size) {
         try {

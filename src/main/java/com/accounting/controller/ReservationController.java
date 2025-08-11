@@ -22,9 +22,9 @@ public class ReservationController {
     @Autowired
     private final ReservationService reservationService;
 
-    @GetMapping("/")
+    @GetMapping()
     public ResponseEntity<?> getReservationsWithPagination(
-            @RequestParam String input,
+            @RequestParam(required = false) String input,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
         try{

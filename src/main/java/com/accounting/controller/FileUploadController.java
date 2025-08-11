@@ -49,7 +49,7 @@ public class FileUploadController {
 
     }
 
-    @PostMapping("/")
+    @PostMapping()
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file,
                                                    @RequestParam("reservationId") Long reservationId) {
 
