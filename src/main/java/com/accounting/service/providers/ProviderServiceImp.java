@@ -42,10 +42,14 @@ public class ProviderServiceImp implements ProviderService{
 
     public PageDTO getProviderByFilters(String input, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Provider> providerPage = providerRepository.findByFilter(input, pageable);
+        Page<Provider> providerPage;
+        if (input == null || input.isBlank()) {
+            providerPage = providerRepository.findAllActiveProviders(pageable);
+        } else {
+            providerPage = providerRepository.findByFilter(input.trim(), pageable);
+        }
 
         List<ProviderDTO> providerDTOList = providerPage.getContent()
-
                 .stream()
                 .map(ProviderServiceHelper::mapProviderToDTO)
                 .toList();

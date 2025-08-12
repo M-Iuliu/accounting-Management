@@ -10,8 +10,12 @@ import org.springframework.data.repository.query.Param;
 public interface ProviderRepository extends JpaRepository<Provider, Long> {
 
     @Query("SELECT p FROM Provider p " +
-            "WHERE LOWER(p.providerName) LIKE LOWER(CONCAT('%', :input, '%')) " +
-            "OR p.telephone LIKE CONCAT('%', :input, '%') " )
+            "WHERE p.isDeleted is null " +
+            "AND (LOWER(p.providerName) LIKE LOWER(CONCAT('%', :input, '%')) " +
+            "OR p.telephone LIKE CONCAT('%', :input, '%')) ")
     Page<Provider> findByFilter(@Param("input") String input, Pageable pageable);
+
+    @Query("SELECT p FROM Provider p WHERE p.isDeleted is null")
+    Page<Provider> findAllActiveProviders(Pageable pageable);
 
 }
