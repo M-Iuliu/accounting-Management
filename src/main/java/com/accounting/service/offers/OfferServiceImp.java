@@ -131,6 +131,7 @@ public class OfferServiceImp implements OfferService{
 //  because they might have dependencies with other entities
 
         Offer offer = findOfferById(id);
+        offer.setStatus(OfferStatusEnum.PIERDUT); //TODO: [FE] announce on deletion that it also means setting the status PIERDUT
         offer.setIsDeleted(Boolean.TRUE);
         offer.setDeletionDate(new Date());
         offerRepository.save(offer);
