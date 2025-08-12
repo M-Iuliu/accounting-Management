@@ -66,7 +66,7 @@ public class ClientServiceImp implements ClientService{
         return client;
     }
 
-    public ClientDTO patchClient(Long id, ClientAddEditForm clientAddEditForm) throws ClientNotFoundException {
+    public ClientDTO editClient(Long id, ClientAddEditForm clientAddEditForm) throws ClientNotFoundException {
         // get client from DB
         Client client = findById(id);
 

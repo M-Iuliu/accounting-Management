@@ -14,7 +14,7 @@ public interface ClientService {
 
     Client findById(Long id) throws ClientNotFoundException;
 
-    ClientDTO patchClient(Long id, ClientAddEditForm updateDto) throws ClientNotFoundException;
+    ClientDTO editClient(Long id, ClientAddEditForm updateDto) throws ClientNotFoundException;
 
     void deleteClientById(Long id) throws ClientNotFoundException;
 

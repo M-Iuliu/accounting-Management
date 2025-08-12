@@ -47,10 +47,10 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.CREATED).body(clientService.saveClient(client));
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<?> patchClient(@PathVariable Long id, @RequestBody ClientAddEditForm updateDto) {
+    @PutMapping("/{id}")
+    public ResponseEntity<?> editClient(@PathVariable Long id, @RequestBody ClientAddEditForm updateDto) {
         try {
-            ClientDTO updatedClient = clientService.patchClient(id, updateDto);
+            ClientDTO updatedClient = clientService.editClient(id, updateDto);
             return ResponseEntity.ok(updatedClient);
         } catch (EntityNotFoundException e) {
             return ResponseEntity
