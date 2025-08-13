@@ -3,15 +3,17 @@ package com.accounting.entity;
 import com.accounting.entity.enums.NotificationStatus;
 import com.accounting.entity.enums.NotificationType;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.Date;
 
 
 @Entity
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class Notification {
 
     @Id
@@ -27,6 +29,6 @@ public class Notification {
     private NotificationStatus notificationStatus;
     private NotificationType notificationType;
     private String message;
-    private String date;
+    private Date date;
 
 }
