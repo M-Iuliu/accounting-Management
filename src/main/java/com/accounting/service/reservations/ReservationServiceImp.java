@@ -78,7 +78,7 @@ public class ReservationServiceImp implements ReservationService {
         Page<Reservation> reservationPage;
 
         if (input == null || input.isBlank()) {
-            reservationPage = reservationRepository.findAll(pageable);
+            reservationPage = reservationRepository.findAllActiveReservations(pageable);
         } else {
             reservationPage = reservationRepository.findByNameOrPhone(input.trim(), pageable);
         }
