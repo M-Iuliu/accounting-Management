@@ -9,7 +9,6 @@ import com.accounting.dto.reservation.ReservationShortDTO;
 import com.accounting.entity.Offer;
 import com.accounting.entity.Provider;
 import com.accounting.entity.Reservation;
-import com.accounting.entity.enums.ContextType;
 import com.accounting.exeption.ClientNotFoundException;
 import com.accounting.repository.ReservationRepository;
 import com.accounting.service.clients.ClientService;
@@ -24,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import static com.accounting.service.reservations.ReservationServiceHelper.mapToReservationParticipant;
 
@@ -46,7 +46,7 @@ public class ReservationServiceImp implements ReservationService {
     }
 
     @Transactional
-    public ReservationDTO createReservation(ReservationForm reservationForm, Offer offer) throws ClientNotFoundException {
+    public void createReservation(ReservationForm reservationForm, Offer offer) throws ClientNotFoundException {
         Reservation reservation = ReservationServiceHelper.mapReservationFormToEntity(reservationForm);
         reservation.setOffer(offer);
         reservation.setClient(clientService.findById(reservationForm.getClientId()));
@@ -55,14 +55,10 @@ public class ReservationServiceImp implements ReservationService {
         reservation.setParticipants(
                 mapToReservationParticipant(reservation, reservationForm.getParticipants()));
 
-        Reservation saved = reservationRepository.save(reservation);
+        reservation.setBookedDate(new Date());
+        reservation.setBookingRef(UUID.randomUUID().toString());
 
-        ReservationDTO dto = reservationServiceHelper.mapEntityToReservationDTO(saved);
-        dto.setClient(clientService.mapToShortDto(saved.getClient()));
-        dto.setProviderDTO(providerService.mapToDto(saved.getProvider()));
-        dto.setCommentList(commentService.getComments(ContextType.RESERVATION, saved.getReservationId()));
-
-        return dto;
+        reservationRepository.save(reservation);
     }
 
     public Reservation findById(Long reservationId) {

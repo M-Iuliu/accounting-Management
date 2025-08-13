@@ -3,7 +3,7 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
     <!-- ChangeSet 1 -->
-    <changeSet author="emi (generated)" id="1725011854646-1">
+    <changeSet author="emi (generated)" id="offer-1">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="offer"/>
@@ -11,7 +11,7 @@
         </preConditions>
         <createTable tableName="offer">
             <column autoIncrement="true" name="offer_id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="offer_pkey"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_OFFER"/>
             </column>
             <column name="client_id" type="BIGINT">
                 <constraints nullable="false"/>
@@ -46,41 +46,7 @@
     </changeSet>
 
     <!-- ChangeSet 2 -->
-    <changeSet author="emi (generated)" id="1725011854646-2">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="client_offer"/>
-            </not>
-        </preConditions>
-        <createTable tableName="client_offer">
-            <column name="client_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="offer_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-
-    <!-- ChangeSet 3 -->
-    <changeSet author="emi (generated)" id="1725011854646-3">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="client_reservation"/>
-            </not>
-        </preConditions>
-        <createTable tableName="client_reservation">
-            <column name="client_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="reservation_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-
-    <!-- ChangeSet 4 -->
-    <changeSet author="emi (generated)" id="1725011854646-4">
+    <changeSet author="emi (generated)" id="reservation-2">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="reservation"/>
@@ -88,7 +54,7 @@
         </preConditions>
         <createTable tableName="reservation">
             <column autoIncrement="true" name="reservation_id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="reservation_pkey"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_RESERVATION"/>
             </column>
             <column name="client_id" type="BIGINT">
                 <constraints nullable="false"/>
@@ -101,9 +67,7 @@
             <column name="return_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
             <column name="destination" type="VARCHAR(255)"/>
             <column name="hotel" type="VARCHAR(255)"/>
-            <column name="roomNo" type="INTEGER">
-                <constraints nullable="false"/>
-            </column>
+            <column name="room_no" type="INTEGER"/>
             <column name="transport" type="VARCHAR(255)"/>
             <column name="price" type="FLOAT8">
                 <constraints nullable="false"/>
@@ -125,39 +89,8 @@
         </createTable>
     </changeSet>
 
-    <!-- ChangeSet 5 -->
-    <changeSet author="emi (generated)" id="1725011854646-5">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <uniqueConstraintExists tableName="client_offer" constraintName="UK_CLIENT_OFFER"/>
-            </not>
-        </preConditions>
-        <addUniqueConstraint columnNames="offer_id" constraintName="UK_CLIENT_OFFER" tableName="client_offer"/>
-    </changeSet>
-
-    <!-- ChangeSet 6 -->
-    <changeSet author="emi (generated)" id="1725011854646-6">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <uniqueConstraintExists tableName="client_reservation" constraintName="UK_CLIENT_RESERVATION"/>
-            </not>
-        </preConditions>
-        <addUniqueConstraint columnNames="reservation_id" constraintName="UK_CLIENT_RESERVATION"
-                             tableName="client_reservation"/>
-    </changeSet>
-
-    <!-- ChangeSet 7 -->
-    <changeSet author="emi (generated)" id="1725011854646-7">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <uniqueConstraintExists tableName="reservation" constraintName="UK_RESERVATION_OFFER"/>
-            </not>
-        </preConditions>
-        <addUniqueConstraint columnNames="offer_id" constraintName="UK_RESERVATION_OFFER" tableName="reservation"/>
-    </changeSet>
-
-    <!-- ChangeSet 8 -->
-    <changeSet author="emi (generated)" id="1725011854646-8">
+    <!-- ChangeSet 3 -->
+    <changeSet author="emi (generated)" id="client-3">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="client"/>
@@ -165,7 +98,7 @@
         </preConditions>
         <createTable tableName="client">
             <column autoIncrement="true" name="client_id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="client_pkey"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CLIENT"/>
             </column>
             <column name="email" type="VARCHAR(255)"/>
             <column name="name" type="VARCHAR(255)"/>
@@ -176,8 +109,8 @@
         </createTable>
     </changeSet>
 
-    <!-- ChangeSet 9 -->
-    <changeSet author="emi (generated)" id="1725011854646-9">
+    <!-- ChangeSet 4 -->
+    <changeSet author="emi (generated)" id="provider-4">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="provider"/>
@@ -185,17 +118,17 @@
         </preConditions>
         <createTable tableName="provider">
             <column autoIncrement="true" name="provider_id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="provider_pkey"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_PROVIDER"/>
             </column>
             <column name="provider_name" type="VARCHAR(255)"/>
             <column name="telephone" type="VARCHAR(255)"/>
             <column name="email" type="VARCHAR(255)"/>
-            <column name="webLink" type="VARCHAR(255)"/>
+            <column name="web_link" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
 
-    <!-- ChangeSet 10 -->
-    <changeSet author="emi (generated)" id="1725011854646-10">
+    <!-- ChangeSet 5 -->
+    <changeSet author="emi (generated)" id="FK_RESERVATION_OFFER-5">
         <preConditions onFail="MARK_RAN">
             <not>
                 <foreignKeyConstraintExists foreignKeyName="FK_RESERVATION_OFFER"/>
@@ -206,56 +139,18 @@
                                  referencedTableName="offer"/>
     </changeSet>
 
-    <!-- ChangeSet 11 -->
-    <changeSet author="emi (generated)" id="1725011854646-11">
+    <!-- ChangeSet 6 -->
+    <changeSet author="emi (generated)" id="UK_RESERVATION_OFFER-6">
         <preConditions onFail="MARK_RAN">
             <not>
-                <foreignKeyConstraintExists foreignKeyName="FK_OFFER_CLIENT"/>
+                <uniqueConstraintExists tableName="reservation" constraintName="UK_RESERVATION_OFFER"/>
             </not>
         </preConditions>
-        <addForeignKeyConstraint baseColumnNames="offer_id" baseTableName="client_offer"
-                                 constraintName="FK_CLIENT_OFFER_CLIENT" referencedColumnNames="offer_id"
-                                 referencedTableName="offer"/>
+        <addUniqueConstraint columnNames="offer_id" constraintName="UK_RESERVATION_OFFER" tableName="reservation"/>
     </changeSet>
 
-    <!-- ChangeSet 12 -->
-    <changeSet author="emi (generated)" id="1725011854646-12">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <foreignKeyConstraintExists foreignKeyName="FK_CLIENT_OFFER"/>
-            </not>
-        </preConditions>
-        <addForeignKeyConstraint baseColumnNames="client_id" baseTableName="client_offer"
-                                 constraintName="FK_CLIENT_OFFER_OFFER" referencedColumnNames="client_id"
-                                 referencedTableName="client"/>
-    </changeSet>
-
-    <!-- ChangeSet 13 -->
-    <changeSet author="emi (generated)" id="1725011854646-13">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <foreignKeyConstraintExists foreignKeyName="FK_RESERVATION_CLIENT"/>
-            </not>
-        </preConditions>
-        <addForeignKeyConstraint baseColumnNames="reservation_id" baseTableName="client_reservation"
-                                 constraintName="FK_CLIENT_RESERVATION_CLIENT" referencedColumnNames="reservation_id"
-                                 referencedTableName="reservation"/>
-    </changeSet>
-
-    <!-- ChangeSet 14 -->
-    <changeSet author="emi (generated)" id="1725011854646-14">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <foreignKeyConstraintExists foreignKeyName="FK_CLIENT_RESERVATION"/>
-            </not>
-        </preConditions>
-        <addForeignKeyConstraint baseColumnNames="client_id" baseTableName="client_reservation"
-                                 constraintName="FK_CLIENT_RESERVATION_RESERVATION" referencedColumnNames="client_id"
-                                 referencedTableName="client"/>
-    </changeSet>
-
-    <!-- ChangeSet 15 -->
-    <changeSet author="emi (generated)" id="1725011854646-15">
+    <!-- ChangeSet 7 -->
+    <changeSet author="emi (generated)" id="FK_RESERVATION_CLIENT-7">
         <preConditions onFail="MARK_RAN">
             <not>
                 <foreignKeyConstraintExists foreignKeyName="FK_RESERVATION_CLIENT"/>
@@ -266,8 +161,8 @@
                                  referencedTableName="client"/>
     </changeSet>
 
-    <!-- ChangeSet 16 -->
-    <changeSet author="emi (generated)" id="1725011854646-16">
+    <!-- ChangeSet 8 -->
+    <changeSet author="emi (generated)" id="FK_RESERVATION_PROVIDER-8">
         <preConditions onFail="MARK_RAN">
             <not>
                 <foreignKeyConstraintExists foreignKeyName="FK_RESERVATION_PROVIDER"/>
@@ -278,17 +173,8 @@
                                  referencedTableName="provider"/>
     </changeSet>
 
-    <!-- ChangeSet 17 -->
-    <!--    <changeSet id="add-persons-number-column-to-offer" author="emi">-->
-    <!--        <addColumn tableName="offer">-->
-    <!--            <column name="persons_number" type="INT" defaultValue="0">-->
-    <!--                <constraints nullable="false"/>-->
-    <!--            </column>-->
-    <!--        </addColumn>-->
-    <!--    </changeSet>-->
-
-    <!-- ChangeSet 18 -->
-    <changeSet author="andreea" id="create-comment-table">
+    <!-- ChangeSet 9 -->
+    <changeSet author="andreea" id="comment-9">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="comment"/>
@@ -296,19 +182,19 @@
         </preConditions>
         <createTable tableName="comment">
             <column autoIncrement="true" name="comment_id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="comment_pkey"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_COMMENT"/>
             </column>
             <column name="message" type="VARCHAR(255)"/>
             <column name="date" type="TIMESTAMP WITHOUT TIME ZONE"/>
-            <column name="contextType" type="VARCHAR(255)"/>
-            <column name="contextId" type="BIGINT"/>
-            <column name="commentType" type="VARCHAR(255)"/>
-            <column name="replyTo" type="VARCHAR(255)"/>
+            <column name="context_type" type="VARCHAR(255)"/>
+            <column name="context_id" type="BIGINT"/>
+            <column name="comment_type" type="VARCHAR(255)"/>
+            <column name="reply_to" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
 
-    <!-- ChangeSet 19 -->
-    <changeSet author="andreea" id="create-notif-table">
+    <!-- ChangeSet 10 -->
+    <changeSet author="andreea" id="notification-10">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="notification"/>
@@ -316,21 +202,21 @@
         </preConditions>
         <createTable tableName="notification">
             <column autoIncrement="true" name="notification_id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="notification_pkey"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_NOTIFICATION"/>
             </column>
-            <column name="contextId" type="BIGINT"/>
-            <column name="contextType" type="VARCHAR(255)"/>
+            <column name="context_id" type="BIGINT"/>
+            <column name="context_type" type="VARCHAR(255)"/>
             <column name="message" type="VARCHAR(255)"/>
-            <column name="notificationType" type="VARCHAR(255)"/>
-            <column name="notificationStatus" type="VARCHAR(255)"/>
+            <column name="notification_type" type="VARCHAR(255)"/>
+            <column name="notification_status" type="VARCHAR(255)"/>
             <column name="date" type="TIMESTAMP WITHOUT TIME ZONE"/>
             <column name="client_id" type="BIGINT"/>
         </createTable>
     </changeSet>
 
 
-    <!-- ChangeSet 20 -->
-    <changeSet author="andreea" id="notif-client-FK">
+    <!-- ChangeSet 11 -->
+    <changeSet author="andreea" id="FK_NOTIFICATION_CLIENT-11">
         <preConditions onFail="MARK_RAN">
             <not>
                 <foreignKeyConstraintExists foreignKeyName="FK_NOTIFICATION_CLIENT"/>

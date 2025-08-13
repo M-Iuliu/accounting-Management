@@ -1,10 +1,8 @@
 package com.accounting.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,7 +11,8 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @ToString
 public class Reservation {
 
@@ -32,6 +31,7 @@ public class Reservation {
     //    mappedBy = "reservation" must match the field name in ReservationParticipants.
 //    CascadeType.ALL ensures participants are saved/deleted along with the reservation.
 //    orphanRemoval = true removes participants if they're removed from the list.
+    @JsonIgnore
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReservationParticipants> participants = new ArrayList<>(); //editable
 
@@ -56,6 +56,7 @@ public class Reservation {
     @JoinColumn(name = "provider_id", nullable = false)
     private Provider provider;//editable
 
+    @JsonIgnore
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReservationFile> uploadedFiles;
 

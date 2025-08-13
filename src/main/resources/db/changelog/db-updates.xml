@@ -10,4 +10,14 @@
     <!--        </addColumn>-->
     <!--    </changeSet>-->
 
+    <!--    <changeSet id="20250812-1" author="andreea">-->
+    <!--        <preConditions onFail="MARK_RAN">-->
+    <!--            <columnExists tableName="reservation" columnName="roomNo"/>-->
+    <!--        </preConditions>-->
+
+    <!--        <dropNotNullConstraint-->
+    <!--                tableName="reservation"-->
+    <!--                columnName="roomNo"-->
+    <!--                columnDataType="INTEGER"/>-->
+    <!--    </changeSet>-->
 </databaseChangeLog>

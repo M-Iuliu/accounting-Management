@@ -21,6 +21,7 @@ public interface OfferService {
     OfferDTO patchOffer(Long id, OfferPatchDTO patchDTO);
 
     void updateOfferStatus(Long id, OfferUpdateStatusDTO updates) throws ClientNotFoundException;
+
     void deleteOfferById(Long id);
 
 }

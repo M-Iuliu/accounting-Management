@@ -1,5 +1,6 @@
 package com.accounting.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,11 +24,8 @@ public class Provider {
     private String email;
     private String webLink;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "reservation_provider",
-            joinColumns = @JoinColumn(name = "provider_id"),
-            inverseJoinColumns = @JoinColumn(name = "reservation_id"))
+    @JsonIgnore
+    @OneToMany(mappedBy = "provider", cascade = CascadeType.ALL)
     private List<Reservation> reservationList;
 
     private Boolean isDeleted;

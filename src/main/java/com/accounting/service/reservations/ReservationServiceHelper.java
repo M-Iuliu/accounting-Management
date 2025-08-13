@@ -111,9 +111,6 @@ public class ReservationServiceHelper {
     public static Reservation mapReservationFormToEntity(ReservationForm reservationForm) {
         Reservation reservation = new Reservation();
 
-        // Map other fields from ReservationForm to Reservation
-//        reservation.setParticipants(reservationForm.getParticipants());
-//        reservation.setChildrenAge(reservationForm.getParticipants().stream().filter(part-> part.//map(participant -> participant));
         reservation.setDepartureDate(reservationForm.getDepartureDate());
         reservation.setReturnDate(reservationForm.getReturnDate());
         reservation.setRoomNo(reservationForm.getRoomNo());
@@ -123,6 +120,7 @@ public class ReservationServiceHelper {
         reservation.setPrice(reservationForm.getTotalPrice());
         reservation.setReceipted(reservationForm.getRemainingCost());
         reservation.setBalanceDueDate(reservationForm.getPaymentDeadlineDate());
+        reservation.setCurrency(reservationForm.getCurrency());
 
         return reservation;
     }

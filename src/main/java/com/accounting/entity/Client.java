@@ -1,5 +1,6 @@
 package com.accounting.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,21 +29,11 @@ public class Client {
     private Boolean isDeleted;
     private Date deletionDate; //TODO: to add Auditable to all classes
 
-//    @JsonIgnore
-//    @OneToMany(cascade = CascadeType.ALL)
-//    @JoinTable(
-//            name = "client_offer",
-//            joinColumns = @JoinColumn(name = "client_id"),
-//            inverseJoinColumns = @JoinColumn(name = "offer_id"))
+    @JsonIgnore
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Offer> offerList;
 
-//    @JsonIgnore
-//    @OneToMany(cascade = CascadeType.ALL)
-//    @JoinTable(
-//            name = "client_reservation",
-//            joinColumns = @JoinColumn(name = "client_id"),
-//            inverseJoinColumns = @JoinColumn(name = "reservation_id"))
+    @JsonIgnore
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservationList;
 
