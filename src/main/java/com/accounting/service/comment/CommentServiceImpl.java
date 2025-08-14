@@ -33,7 +33,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     public List<CommentDTO> getComments(String contextType, Long contextId) {
-        return commentRepository.findByContextTypeAndContextId(ContextType.valueOf(contextType), contextId)
+        return commentRepository.findByContextTypeAndContextId(ContextType.valueOf(contextType.toUpperCase()), contextId)
                 .stream()
                 .map(this::mapToDto)
                 .toList();
