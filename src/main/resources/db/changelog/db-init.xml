@@ -42,6 +42,8 @@
             </column>
             <column name="obs" type="VARCHAR(255)"/>
             <column name="offer_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="deletion_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="is_deleted" type="BOOLEAN"/>
         </createTable>
     </changeSet>
 
@@ -82,10 +84,12 @@
             <column name="offer_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="currency" type="FLOAT8">
+            <column name="currency" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="provider_id" type="BIGINT"/>
+            <column name="deletion_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="is_deleted" type="BOOLEAN"/>
         </createTable>
     </changeSet>
 
@@ -106,6 +110,8 @@
             <column name="telephone" type="VARCHAR(255)"/>
             <column name="obs" type="VARCHAR(255)"/>
             <column name="title" type="VARCHAR(255)"/>
+            <column name="deletion_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="is_deleted" type="BOOLEAN"/>
         </createTable>
     </changeSet>
 
@@ -124,6 +130,8 @@
             <column name="telephone" type="VARCHAR(255)"/>
             <column name="email" type="VARCHAR(255)"/>
             <column name="web_link" type="VARCHAR(255)"/>
+            <column name="deletion_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="is_deleted" type="BOOLEAN"/>
         </createTable>
     </changeSet>
 
@@ -225,5 +233,64 @@
         <addForeignKeyConstraint baseColumnNames="client_id" baseTableName="notification"
                                  constraintName="FK_NOTIFICATION_CLIENT" referencedColumnNames="client_id"
                                  referencedTableName="client"/>
+    </changeSet>
+
+    <!-- ChangeSet 12 -->
+    <changeSet author="andreea" id="reservation-file-12">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="reservation_file"/>
+            </not>
+        </preConditions>
+        <createTable tableName="reservation_file">
+            <column autoIncrement="true" name="file_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_RESERVATION_FILE"/>
+            </column>
+            <column name="file_name" type="VARCHAR(255)"/>
+            <column name="reservation_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+
+
+    <!-- ChangeSet 13 -->
+    <changeSet author="andreea" id="FK_RESERVATION_FILE-13">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="FK_RESERVATION_FILE"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="reservation_id" baseTableName="reservation_file"
+                                 constraintName="FK_RESERVATION_FILES" referencedColumnNames="reservation_id"
+                                 referencedTableName="reservation"/>
+    </changeSet>
+
+    <!-- ChangeSet 12 -->
+    <changeSet author="andreea" id="reservation_participant-14">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="reservation_participant"/>
+            </not>
+        </preConditions>
+        <createTable tableName="reservation_participant">
+            <column autoIncrement="true" name="participant_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_RESERVATION_PARTICIPANT"/>
+            </column>
+            <column name="participant_name" type="VARCHAR(255)"/>
+            <column name="participant_age" type="BIGINT"/>
+            <column name="reservation_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+
+
+    <!-- ChangeSet 13 -->
+    <changeSet author="andreea" id="FK_RESERVATION_PARTICIPANT-15">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="FK_RESERVATION_PARTICIPANT"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="reservation_id" baseTableName="reservation_participant"
+                                 constraintName="FK_RESERVATION_PARTICIPANT" referencedColumnNames="reservation_id"
+                                 referencedTableName="reservation"/>
     </changeSet>
 </databaseChangeLog>

@@ -25,10 +25,17 @@ public class Notification {
     private Client client;
 
     private String contextType;
+
     private Long contextId;
+
+    @Enumerated(EnumType.STRING)
     private NotificationStatus notificationStatus;
+
+    @Enumerated(EnumType.STRING)
     private NotificationType notificationType;
+
     private String message;
+
     private Date date;
 
 }

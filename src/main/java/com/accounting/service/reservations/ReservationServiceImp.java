@@ -118,7 +118,7 @@ public class ReservationServiceImp implements ReservationService {
 //            throw new EntityNotFoundException("Reservation with id " + id + " not found");
 //        }
 //        reservationRepository.deleteById(id);
-
+// TODO: To change also the offer status to PIERDUT ?
         Reservation reservation = findById(id);
         reservation.setIsDeleted(Boolean.TRUE);
         reservation.setDeletionDate(new Date());

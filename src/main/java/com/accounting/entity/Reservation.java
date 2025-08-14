@@ -33,7 +33,7 @@ public class Reservation {
 //    orphanRemoval = true removes participants if they're removed from the list.
     @JsonIgnore
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ReservationParticipants> participants = new ArrayList<>(); //editable
+    private List<ReservationParticipant> participants = new ArrayList<>(); //editable
 
     private String bookingRef;
     private Date bookedDate;

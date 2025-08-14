@@ -4,7 +4,7 @@ import com.accounting.dto.client.ClientShortDTO;
 import com.accounting.dto.reservation.*;
 import com.accounting.entity.Client;
 import com.accounting.entity.Reservation;
-import com.accounting.entity.ReservationParticipants;
+import com.accounting.entity.ReservationParticipant;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,13 +40,13 @@ public class ReservationServiceHelper {
         dto.setParticipants(
                 reservation.getParticipants()
                         .stream()
-                        .map(ReservationParticipants::getParticipantName)
+                        .map(ReservationParticipant::getParticipantName)
                         .toList());
 
         dto.setChildrenAge(
                 reservation.getParticipants()
                         .stream()
-                        .map(ReservationParticipants::getParticipantAge)
+                        .map(ReservationParticipant::getParticipantAge)
                         .filter(participantAge -> participantAge < 18)
                         .toList());
 
@@ -125,11 +125,11 @@ public class ReservationServiceHelper {
         return reservation;
     }
 
-    public static List<ReservationParticipants> mapToReservationParticipant(Reservation reservation,
-                                                                            List<ReservationParticipantDTO> participantList) {
+    public static List<ReservationParticipant> mapToReservationParticipant(Reservation reservation,
+                                                                           List<ReservationParticipantDTO> participantList) {
         return participantList.stream()
                 .map(p -> {
-                    ReservationParticipants rp = new ReservationParticipants();
+                    ReservationParticipant rp = new ReservationParticipant();
                     rp.setParticipantName(p.getParticipantName());
                     rp.setParticipantAge(p.getParticipantAge());
                     rp.setReservation(reservation);
@@ -137,7 +137,7 @@ public class ReservationServiceHelper {
                 }).toList();
     }
 
-    public static List<ReservationParticipantDTO> mapToReservationParticipantDTO(List<ReservationParticipants> participantList) {
+    public static List<ReservationParticipantDTO> mapToReservationParticipantDTO(List<ReservationParticipant> participantList) {
         return participantList.stream().map(p -> {
             ReservationParticipantDTO rp = new ReservationParticipantDTO();
             rp.setParticipantName(p.getParticipantName());
