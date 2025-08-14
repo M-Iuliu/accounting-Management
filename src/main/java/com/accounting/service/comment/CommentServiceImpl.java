@@ -27,13 +27,13 @@ public class CommentServiceImpl implements CommentService {
         comment.setContextType(ContextType.valueOf(dto.getContextType())); //TODO: check if mapping is ok
         comment.setContextId(dto.getContextId());
         comment.setCommentType(CommentType.valueOf(dto.getCommentType())); //TODO: check if mapping is ok
-        comment.setReplyTo(dto.getReplyTo());
+        comment.setReplyTo(dto.getReplyTo() != null ? dto.getReplyTo() : null);
 
         return commentRepository.save(comment);
     }
 
-    public List<CommentDTO> getComments(ContextType contextType, Long contextId) {
-        return commentRepository.findByContextTypeAndContextId(contextType, contextId)
+    public List<CommentDTO> getComments(String contextType, Long contextId) {
+        return commentRepository.findByContextTypeAndContextId(ContextType.valueOf(contextType), contextId)
                 .stream()
                 .map(this::mapToDto)
                 .toList();
@@ -44,7 +44,7 @@ public class CommentServiceImpl implements CommentService {
         return new CommentDTO(
                 comment.getCommentId(),
                 comment.getMessage(),
-                comment.getDate().toString(),
+                comment.getDate(),
                 comment.getContextType().toString(), //TODO: check if mapping is ok
                 comment.getContextId(),
                 comment.getCommentType().toString(), //TODO: check if mapping is ok

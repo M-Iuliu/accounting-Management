@@ -3,6 +3,8 @@ package com.accounting.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -13,7 +15,7 @@ public class CommentDTO {
 
     private Long commentId;
     private String message;
-    private String date; // ISO date string like "2025-04-06"
+    private Date date; // ISO date string like "2025-04-06"
     private String contextType; //  'offer' | 'reservation' | 'notification';
     private Long contextId;
     private String commentType; //  'direct' | 'notification';
