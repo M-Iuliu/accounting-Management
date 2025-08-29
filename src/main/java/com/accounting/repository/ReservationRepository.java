@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Date;
+import java.util.List;
+
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
     @Query("SELECT r FROM Reservation r " +
@@ -19,5 +22,17 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     @Query("SELECT r FROM Reservation r WHERE r.isDeleted is null")
     Page<Reservation> findAllActiveReservations(Pageable pageable);
+
+    @Query("SELECT r FROM Reservation r WHERE r.isDeleted is null")
+    List<Reservation> findAllActiveReservations();
+
+    @Query("SELECT r FROM Reservation r WHERE r.returnDate = :targetDate AND r.isActive = true")
+    List<Reservation> findReservationsWithReturnDate(@Param("targetDate") Date targetDate);
+
+    @Query("SELECT r FROM Reservation r WHERE r.departureDate = :targetDate AND r.isActive = true")
+    List<Reservation> findReservationsWithDepartureDate(@Param("targetDate") Date targetDate);
+
+    @Query("SELECT r FROM Reservation r WHERE r.paymentDueDate = :targetDate AND r.isActive = true")
+    List<Reservation> findReservationsWithPaymentDueDate(@Param("targetDate") Date targetDate);
 
 }

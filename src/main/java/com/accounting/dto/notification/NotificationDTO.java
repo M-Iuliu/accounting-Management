@@ -1,32 +1,27 @@
 package com.accounting.dto.notification;
 
 import com.accounting.dto.CommentDTO;
-import com.accounting.dto.client.ClientDTO;
-import com.accounting.entity.enums.NotificationStatus;
-import com.accounting.entity.enums.NotificationType;
+import com.accounting.dto.client.ClientShortDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class NotificationDTO {
-
-    private Long commentId;
-    private ClientDTO client;
-
+    private Long notificationId;
+    private ClientShortDTO client;
     private String contextType;
     private Long contextId;
-    private NotificationStatus notificationStatus;
-    private NotificationType notificationType;
+    private String notificationStatus;
+    private String notificationType;
     private String message;
-    private String time;
-
+    private Date date;
     private List<CommentDTO> commentList;
-
 }

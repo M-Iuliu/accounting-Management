@@ -1,5 +1,6 @@
 package com.accounting.entity;
 
+import com.accounting.entity.enums.ContextType;
 import com.accounting.entity.enums.NotificationStatus;
 import com.accounting.entity.enums.NotificationType;
 import jakarta.persistence.*;
@@ -24,7 +25,8 @@ public class Notification {
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
 
-    private String contextType;
+    @Enumerated(EnumType.STRING)
+    private ContextType contextType; // for which OFFER / RESERVATION is this notification relevant
 
     private Long contextId;
 

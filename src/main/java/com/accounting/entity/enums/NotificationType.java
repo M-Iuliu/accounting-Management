@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public enum NotificationType {
-    URGENT, ACTIVE, HISTORY
+    NEW, ACTIVE, ARCHIVED
 }

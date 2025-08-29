@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Date;
+import java.util.List;
+
 
 public interface OfferRepository extends JpaRepository<Offer, Long> {
 
@@ -20,4 +23,10 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
 
     @Query("SELECT o FROM Offer o WHERE o.isDeleted is null")
     Page<Offer> findAllActiveClients(Pageable pageable);
+
+    @Query("SELECT o FROM Offer o " +
+            "WHERE o.isDeleted = false " +
+            "AND o.status = 'OFERTAT' " +
+            "AND o.offerDate <= :targetDate")
+    List<Offer> findOffersOlderThan(@Param("targetDate") Date targetDate);
 }
