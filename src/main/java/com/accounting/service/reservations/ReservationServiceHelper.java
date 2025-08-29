@@ -27,7 +27,7 @@ public class ReservationServiceHelper {
         reservationShortDTO.setPrice(reservation.getPrice());
         reservationShortDTO.setReceipted(reservation.getReceipted());
         reservationShortDTO.setBalance(reservation.getBalance());
-        reservationShortDTO.setBalanceDueDate(reservation.getBalanceDueDate());
+        reservationShortDTO.setBalanceDueDate(reservation.getPaymentDueDate());
         reservationShortDTO.setCurrency(reservation.getCurrency());
 
         return reservationShortDTO;
@@ -63,7 +63,7 @@ public class ReservationServiceHelper {
         dto.setPrice(reservation.getPrice());
         dto.setReceipted(reservation.getReceipted());
         dto.setBalance(reservation.getBalance());
-        dto.setBalanceDueDate(reservation.getBalanceDueDate());
+        dto.setBalanceDueDate(reservation.getPaymentDueDate());
         dto.setCurrency(reservation.getCurrency());
 
 
@@ -119,7 +119,7 @@ public class ReservationServiceHelper {
         reservation.setTransport(reservationForm.getTransport());
         reservation.setPrice(reservationForm.getTotalPrice());
         reservation.setReceipted(reservationForm.getRemainingCost());
-        reservation.setBalanceDueDate(reservationForm.getPaymentDeadlineDate());
+        reservation.setPaymentDueDate(reservationForm.getPaymentDeadlineDate());
         reservation.setCurrency(reservationForm.getCurrency());
 
         return reservation;
@@ -157,7 +157,7 @@ public class ReservationServiceHelper {
         if (patch.getPrice() != null) reservation.setPrice(patch.getPrice());
         if (patch.getReceipted() != null) reservation.setReceipted(patch.getReceipted());
         if (patch.getBalance() != null) reservation.setBalance(patch.getBalance());
-        if (patch.getBalanceDueDate() != null) reservation.setBalanceDueDate(patch.getBalanceDueDate());
+        if (patch.getBalanceDueDate() != null) reservation.setPaymentDueDate(patch.getBalanceDueDate());
         if (patch.getCurrency() != null) reservation.setCurrency(patch.getCurrency());
     }
 }

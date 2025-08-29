@@ -24,9 +24,9 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = new Comment();
         comment.setMessage(dto.getMessage());
         comment.setDate(new Date());
-        comment.setContextType(ContextType.valueOf(dto.getContextType())); //TODO: check if mapping is ok
+        comment.setContextType(ContextType.valueOf(dto.getContextType()));
         comment.setContextId(dto.getContextId());
-        comment.setCommentType(CommentType.valueOf(dto.getCommentType())); //TODO: check if mapping is ok
+        comment.setCommentType(CommentType.valueOf(dto.getCommentType()));
         comment.setReplyTo(dto.getReplyTo() != null ? dto.getReplyTo() : null);
 
         return commentRepository.save(comment);
@@ -45,9 +45,9 @@ public class CommentServiceImpl implements CommentService {
                 comment.getCommentId(),
                 comment.getMessage(),
                 comment.getDate(),
-                comment.getContextType().toString(), //TODO: check if mapping is ok
+                comment.getContextType().toString(),
                 comment.getContextId(),
-                comment.getCommentType().toString(), //TODO: check if mapping is ok
+                comment.getCommentType().toString(),
                 comment.getReplyTo()
         );
     }

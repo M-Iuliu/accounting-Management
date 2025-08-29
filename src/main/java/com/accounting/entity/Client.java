@@ -24,6 +24,7 @@ public class Client {
     private String surname;
     private String telephone;
     private String email;
+    //TODO: localitate plecare
     private String obs;
 
     private Boolean isDeleted;

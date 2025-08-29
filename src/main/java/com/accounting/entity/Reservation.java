@@ -49,7 +49,7 @@ public class Reservation {
     private double price;//editable
     private double receipted;//editable
     private double balance;//editable
-    private Date balanceDueDate;//editable
+    private Date paymentDueDate;//editable
     private String currency;//editable
 
     @ManyToOne

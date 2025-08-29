@@ -21,15 +21,18 @@ public class Comment {
 
     private String message;
 
-    private Date date; // ISO date string like "2025-04-06"
+    private Date date;
 
     @Enumerated(EnumType.STRING)
-    private ContextType contextType; //  'offer' | 'reservation' | 'notification';
+    private ContextType contextType;
+    // for which OFFER / RESERVATION / NOTIFICATION is this comment relevant
 
     private Long contextId;
 
     @Enumerated(EnumType.STRING)
-    private CommentType commentType; //  'direct' | 'notification';
+    private CommentType commentType;
+    // if this is a reply comment to a NOTIFICATION ('notification')
+    // or if this is a comment of OFFER / RESERVATION ('direct')
 
     private String replyTo;
 }

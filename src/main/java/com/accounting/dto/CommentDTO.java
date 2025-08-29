@@ -15,7 +15,7 @@ public class CommentDTO {
 
     private Long commentId;
     private String message;
-    private Date date; // ISO date string like "2025-04-06"
+    private Date date;
     private String contextType; //  'offer' | 'reservation' | 'notification';
     private Long contextId;
     private String commentType; //  'direct' | 'notification';

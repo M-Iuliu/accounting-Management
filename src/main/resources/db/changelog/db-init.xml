@@ -80,7 +80,7 @@
             <column name="balance" type="FLOAT8">
                 <constraints nullable="false"/>
             </column>
-            <column name="balance_due_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="payment_due_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
             <column name="offer_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
