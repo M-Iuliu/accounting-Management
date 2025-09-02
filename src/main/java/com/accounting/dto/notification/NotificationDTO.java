@@ -22,6 +22,7 @@ public class NotificationDTO {
     private String notificationStatus;
     private String notificationType;
     private String message;
-    private Date date;
+    private Date createDate;
+    private Date updateDate;
     private List<CommentDTO> commentList;
 }

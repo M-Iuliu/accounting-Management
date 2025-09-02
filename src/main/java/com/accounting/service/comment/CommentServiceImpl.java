@@ -3,6 +3,7 @@ package com.accounting.service.comment;
 
 import com.accounting.dto.CommentDTO;
 import com.accounting.entity.Comment;
+import com.accounting.entity.Notification;
 import com.accounting.entity.enums.CommentType;
 import com.accounting.entity.enums.ContextType;
 import com.accounting.repository.CommentRepository;
@@ -28,6 +29,18 @@ public class CommentServiceImpl implements CommentService {
         comment.setContextId(dto.getContextId());
         comment.setCommentType(CommentType.valueOf(dto.getCommentType()));
         comment.setReplyTo(dto.getReplyTo() != null ? dto.getReplyTo() : null);
+
+        return commentRepository.save(comment);
+    }
+
+    public Comment createCommentOnDismissNotification(Notification notification, String message) {
+        Comment comment = new Comment();
+        comment.setMessage(message);
+        comment.setDate(new Date());
+        comment.setContextType(ContextType.NOTIFICATION);
+        comment.setContextId(notification.getNotificationId());
+        comment.setCommentType(CommentType.DIRECT);
+        comment.setReplyTo(notification.getMessage());
 
         return commentRepository.save(comment);
     }

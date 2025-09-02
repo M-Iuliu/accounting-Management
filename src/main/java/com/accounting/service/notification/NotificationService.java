@@ -15,4 +15,6 @@ public interface NotificationService {
     List<NotificationDTO> getNotificationsByContext(String contextType, Long contextId);
 
     NotificationDataDTO getNotificationsCategories();
+
+    void dismissNotification(Long notificationId, String message);
 }

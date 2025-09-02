@@ -1,6 +1,7 @@
 package com.accounting.service.notification;
 
 import com.accounting.entity.Client;
+import com.accounting.entity.Notification;
 import com.accounting.entity.Offer;
 import com.accounting.entity.Reservation;
 import com.accounting.entity.enums.ContextType;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -29,9 +31,9 @@ public class NotificationSchedulerService {
     /* Notification logic:
      * -> each notification type is signaled once per offer, per client:
      *     -> each reservation can have multiple notification types (return date, departure date, payment due, etc.).
-     *     -> for each type, we check if a notification of that specific type already exists for that reservation.
-     *     -> if it doesn’t exist, creates it.
-     *     -> if it does exist, skips it.
+     *          -> for each type, we check if a notification of that specific type already exists for that reservation.
+     *               -> if it doesn’t exist, creates it.
+     *               -> if it does exist, skips it.
      *
      *  -> for every active reservation
      *      -> if res.return_date is past 2 day -> create notification
@@ -40,7 +42,7 @@ public class NotificationSchedulerService {
      *
      *  -> for every active offer
      *      -> if offer older than 2 days (of today)
-     *      -> create notification ( nr de tel si numele clientului)
+     *           -> create notification ( nr de tel si numele clientului)
      *
      * -> for all ACTIVE notifications, if older than 2 days, then mark as ARCHIVED
      *
@@ -60,11 +62,26 @@ public class NotificationSchedulerService {
         generateDepartureDateNotifications(now);
         generatePaymentDueDateNotifications(now);
         generateOfferNotifications(now);
+        markActiveNotificationToArchive(now);
+    }
+
+    private void markActiveNotificationToArchive(LocalDate now) {
+        Date daysOlder2 = Date.from(now.minusDays(2).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        List<Notification> updatedNotificationList = new ArrayList<>();
+
+        notificationRepository.findNotificationToArchive(daysOlder2, NotificationType.ACTIVE)
+                .forEach(notification -> {
+                    notification.setNotificationType(NotificationType.ARCHIVED);
+                    updatedNotificationList.add(notification);
+                });
+
+        if (!updatedNotificationList.isEmpty())
+            notificationRepository.saveAll(updatedNotificationList);
     }
 
     private void generateReturnDateNotifications(LocalDate now) {
-        Date targetDate = Date.from(now.minusDays(2).atStartOfDay(ZoneId.systemDefault()).toInstant());
-        List<Reservation> reservations = reservationRepository.findReservationsWithReturnDate(targetDate);
+        Date daysOlder2 = Date.from(now.minusDays(2).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        List<Reservation> reservations = reservationRepository.findReservationsWithReturnDate(daysOlder2);
 
         reservations.forEach(r -> {
             Client client = r.getClient();
@@ -85,8 +102,8 @@ public class NotificationSchedulerService {
     }
 
     private void generateDepartureDateNotifications(LocalDate now) {
-        Date targetDate = Date.from(now.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
-        List<Reservation> reservations = reservationRepository.findReservationsWithDepartureDate(targetDate);
+        Date in1Day = Date.from(now.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        List<Reservation> reservations = reservationRepository.findReservationsWithDepartureDate(in1Day);
 
         reservations.forEach(r -> {
             Client client = r.getClient();
@@ -107,8 +124,8 @@ public class NotificationSchedulerService {
     }
 
     private void generatePaymentDueDateNotifications(LocalDate now) {
-        Date targetDate = Date.from(now.plusDays(2).atStartOfDay(ZoneId.systemDefault()).toInstant());
-        List<Reservation> reservations = reservationRepository.findReservationsWithPaymentDueDate(targetDate);
+        Date in2Days = Date.from(now.plusDays(2).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        List<Reservation> reservations = reservationRepository.findReservationsWithPaymentDueDate(in2Days);
 
         reservations.forEach(r -> {
             Client client = r.getClient();
@@ -129,8 +146,8 @@ public class NotificationSchedulerService {
     }
 
     private void generateOfferNotifications(LocalDate now) {
-        Date threshold = Date.from(now.minusDays(2).atStartOfDay(ZoneId.systemDefault()).toInstant());
-        List<Offer> offers = offerRepository.findOffersOlderThan(threshold);
+        Date daysOlder2 = Date.from(now.minusDays(2).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        List<Offer> offers = offerRepository.findOffersOlderThan(daysOlder2);
 
         offers.forEach(offer -> {
             String message = String.format(
@@ -143,7 +160,7 @@ public class NotificationSchedulerService {
             boolean exists = notificationRepository.existsByContextTypeAndContextIdAndNotificationType(
                     "offer",
                     offer.getOfferId(),
-                    NotificationType.ACTIVE
+                    NotificationType.ACTIVE // TODO: change to take in consideration also type NEW
             );
 
             // notify only once per offer

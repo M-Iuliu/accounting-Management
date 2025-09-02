@@ -11,6 +11,7 @@ import com.accounting.entity.enums.NotificationType;
 import com.accounting.repository.NotificationRepository;
 import com.accounting.service.clients.ClientService;
 import com.accounting.service.comment.CommentService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,13 +30,30 @@ public class NotificationServiceImpl implements NotificationService {
         Notification notification = new Notification();
         notification.setClient(client);
         notification.setMessage(message);
-        notification.setDate(new Date());
+        notification.setCreateDate(new Date());
         notification.setContextType(contextType);
         notification.setContextId(contextId);
         notification.setNotificationType(NotificationType.NEW);
         notification.setNotificationStatus(NotificationStatus.UNSEEN);
 
         return notificationRepository.save(notification);
+    }
+
+    public void dismissNotification(Long notificationId, String message) {
+        Notification notification = notificationRepository.findById(notificationId).orElseThrow(() ->
+                new EntityNotFoundException("No notification found for notificationId: " + notificationId));
+
+        if (NotificationType.NEW.equals(notification.getNotificationType())) {
+            notification.setNotificationType(NotificationType.ACTIVE);
+        } else if (NotificationType.ACTIVE.equals(notification.getNotificationType())) {
+            notification.setNotificationType(NotificationType.ARCHIVED);
+        }
+
+        if (message != null)
+            commentService.createCommentOnDismissNotification(notification, message);
+
+
+        notificationRepository.save(notification);
     }
 
     public List<NotificationDTO> getNotificationsByContext(String contextType, Long contextId) {
@@ -76,7 +94,8 @@ public class NotificationServiceImpl implements NotificationService {
 
         notificationDTO.setNotificationId(notification.getNotificationId());
         notificationDTO.setMessage(notification.getMessage());
-        notificationDTO.setDate(notification.getDate());
+        notificationDTO.setCreateDate(notification.getCreateDate());
+        notificationDTO.setUpdateDate(notification.getUpdateDate());
         notificationDTO.setContextType(notification.getContextType().toString());
         notificationDTO.setContextId(notification.getContextId());
         notificationDTO.setNotificationStatus(notification.getNotificationStatus().toString());

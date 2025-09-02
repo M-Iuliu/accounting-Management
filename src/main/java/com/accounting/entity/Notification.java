@@ -38,6 +38,8 @@ public class Notification {
 
     private String message;
 
-    private Date date;
+    private Date createDate;
+
+    private Date updateDate;
 
 }
