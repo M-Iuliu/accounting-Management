@@ -2,6 +2,7 @@ package com.accounting.controller;
 
 import com.accounting.dto.notification.NotificationDTO;
 import com.accounting.dto.notification.NotificationDataDTO;
+import com.accounting.dto.pagination.PageDTO;
 import com.accounting.exeption.ErrorResponse;
 import com.accounting.service.notification.NotificationService;
 import jakarta.persistence.EntityNotFoundException;
@@ -57,6 +58,27 @@ public class NotificationController {
         }
     }
 
+    @GetMapping("/client")
+    public ResponseEntity<?> getNotificationsByClient(
+            @RequestParam(required = false) String input,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        try {
+            PageDTO notifications = notificationService.getNotificationsByClient(input, page, size);
+            return ResponseEntity.ok(notifications);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse(
+                            String.format("Notification not found for client searched by filter: [%s]", input),
+                            HttpStatus.NOT_FOUND.value()));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR.value()));
+        }
+    } //TODO: Check & test endpoint
+
     @PutMapping("/{notificationId}")
     public ResponseEntity<?> dismissNotification(@PathVariable Long notificationId, @RequestBody String comment) {
         try {
@@ -74,7 +96,4 @@ public class NotificationController {
                     .body(new ErrorResponse("An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR.value()));
         }
     }
-
-    //TODO: GET -> search notification by client name / telephone, filtered by given NotificationType
-
 }

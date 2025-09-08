@@ -3,6 +3,8 @@ package com.accounting.service.notification;
 
 import com.accounting.dto.notification.NotificationDTO;
 import com.accounting.dto.notification.NotificationDataDTO;
+import com.accounting.dto.pagination.PageDTO;
+import com.accounting.dto.pagination.PaginationDTO;
 import com.accounting.entity.Client;
 import com.accounting.entity.Notification;
 import com.accounting.entity.enums.ContextType;
@@ -13,6 +15,9 @@ import com.accounting.service.clients.ClientService;
 import com.accounting.service.comment.CommentService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -63,6 +68,31 @@ public class NotificationServiceImpl implements NotificationService {
                         contextId));
     }
 
+    public PageDTO getNotificationsByClient(String input, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Notification> notificationPage;
+
+//        if (input == null || input.isBlank()) {
+//            notificationPage = notificationRepository.findAllActiveReservations(pageable);
+//        } else {
+        notificationPage = notificationRepository.findByClientNameOrPhone(input.trim(), pageable);
+//        }
+
+        List<NotificationDTO> dtoList = notificationPage.getContent()
+                .stream()
+                .map(this::mapToDto)
+                .toList();
+
+        PaginationDTO pagination = new PaginationDTO(
+                notificationPage.getTotalElements(),
+                notificationPage.getSize(),
+                List.of(5, 10, 20),
+                notificationPage.getNumber()
+        );
+
+        return new PageDTO<>(dtoList, pagination);
+    }
+
     public NotificationDataDTO getNotificationsCategories() {
         NotificationDataDTO notificationDataDTO = new NotificationDataDTO();
 
@@ -72,7 +102,6 @@ public class NotificationServiceImpl implements NotificationService {
 
         return notificationDataDTO;
     }
-
 
     private List<NotificationDTO> getNotificationsByType(NotificationType status) {
         return mapToListDto(notificationRepository.findByNotificationType(status));
