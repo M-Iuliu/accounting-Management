@@ -5,6 +5,7 @@ import com.accounting.entity.Notification;
 import com.accounting.entity.Offer;
 import com.accounting.entity.Reservation;
 import com.accounting.entity.enums.ContextType;
+import com.accounting.entity.enums.NotificationCategory;
 import com.accounting.entity.enums.NotificationType;
 import com.accounting.repository.NotificationRepository;
 import com.accounting.repository.OfferRepository;
@@ -41,12 +42,10 @@ public class NotificationSchedulerService {
      *      -> if res.payment_due_date is in 2 day -> create notification
      *
      *  -> for every active offer
-     *      -> if offer older than 2 days (of today)
-     *           -> create notification ( nr de tel si numele clientului)
+     *      -> if offer create_date is older than 2 days (of today)
+     *           -> create notification (nr de tel si numele clientului)
      *
      * -> for all ACTIVE notifications, if older than 2 days, then mark as ARCHIVED
-     *
-     *
      *
      */
 
@@ -69,9 +68,9 @@ public class NotificationSchedulerService {
         Date daysOlder2 = Date.from(now.minusDays(2).atStartOfDay(ZoneId.systemDefault()).toInstant());
         List<Notification> updatedNotificationList = new ArrayList<>();
 
-        notificationRepository.findNotificationToArchive(daysOlder2, NotificationType.ACTIVE)
+        notificationRepository.findNotificationToArchive(daysOlder2, NotificationCategory.ACTIVE)
                 .forEach(notification -> {
-                    notification.setNotificationType(NotificationType.ARCHIVED);
+                    notification.setNotificationCategory(NotificationCategory.ARCHIVED);
                     updatedNotificationList.add(notification);
                 });
 
@@ -89,7 +88,7 @@ public class NotificationSchedulerService {
             boolean exists = notificationRepository.existsByContextTypeAndContextIdAndNotificationType(
                     ContextType.RESERVATION.name(),
                     r.getReservationId(),
-                    NotificationType.ACTIVE
+                    NotificationType.RESERVATION_RETURN
             );
 
             // notify only once per offer
@@ -111,7 +110,7 @@ public class NotificationSchedulerService {
             boolean exists = notificationRepository.existsByContextTypeAndContextIdAndNotificationType(
                     ContextType.RESERVATION.name(),
                     r.getReservationId(),
-                    NotificationType.ACTIVE
+                    NotificationType.RESERVATION_DEPARTURE
             );
 
             // notify only once per offer
@@ -133,7 +132,7 @@ public class NotificationSchedulerService {
             boolean exists = notificationRepository.existsByContextTypeAndContextIdAndNotificationType(
                     ContextType.RESERVATION.name(),
                     r.getReservationId(),
-                    NotificationType.ACTIVE
+                    NotificationType.RESERVATION_PAYMENT
             );
 
             // notify only once per offer
@@ -160,7 +159,7 @@ public class NotificationSchedulerService {
             boolean exists = notificationRepository.existsByContextTypeAndContextIdAndNotificationType(
                     "offer",
                     offer.getOfferId(),
-                    NotificationType.ACTIVE // TODO: change to take in consideration also type NEW
+                    NotificationType.OFFER
             );
 
             // notify only once per offer

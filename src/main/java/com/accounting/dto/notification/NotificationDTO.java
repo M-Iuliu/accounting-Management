@@ -21,6 +21,7 @@ public class NotificationDTO {
     private Long contextId;
     private String notificationStatus;
     private String notificationType;
+    private String notificationCategory;
     private String message;
     private Date createDate;
     private Date updateDate;

@@ -215,9 +215,11 @@
             <column name="context_id" type="BIGINT"/>
             <column name="context_type" type="VARCHAR(255)"/>
             <column name="message" type="VARCHAR(255)"/>
-            <column name="notification_type" type="VARCHAR(255)"/>
-            <column name="notification_status" type="VARCHAR(255)"/>
-            <column name="date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="status" type="VARCHAR(255)"/>
+            <column name="category" type="VARCHAR(255)"/>
+            <column name="type" type="VARCHAR(255)"/>
+            <column name="create_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="update_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
             <column name="client_id" type="BIGINT"/>
         </createTable>
     </changeSet>

@@ -2,6 +2,7 @@ package com.accounting.repository;
 
 import com.accounting.entity.Notification;
 import com.accounting.entity.enums.ContextType;
+import com.accounting.entity.enums.NotificationCategory;
 import com.accounting.entity.enums.NotificationType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,18 +16,18 @@ import java.util.List;
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
     List<Notification> findByContextTypeAndContextId(ContextType contextType, Long contextId);
 
-    List<Notification> findByNotificationType(NotificationType status);
+    List<Notification> findByNotificationCategory(NotificationCategory status);
 
     boolean existsByContextTypeAndContextIdAndNotificationType(
             String contextType,
             Long contextId,
-            NotificationType notificationType
+            NotificationType notificationCategory
     );
 
 
     @Query("SELECT n FROM Notification n WHERE n.updateDate = :targetDate AND n.notificationType = :notifType")
     List<Notification> findNotificationToArchive(@Param("targetDate") Date targetDate,
-                                                 @Param("notifType") NotificationType notifType);
+                                                 @Param("notifType") NotificationCategory notifType);
 
     @Query("SELECT n FROM Notification n " +
             "JOIN n.client c " +

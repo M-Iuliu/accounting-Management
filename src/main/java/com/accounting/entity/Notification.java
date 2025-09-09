@@ -1,6 +1,7 @@
 package com.accounting.entity;
 
 import com.accounting.entity.enums.ContextType;
+import com.accounting.entity.enums.NotificationCategory;
 import com.accounting.entity.enums.NotificationStatus;
 import com.accounting.entity.enums.NotificationType;
 import jakarta.persistence.*;
@@ -32,6 +33,9 @@ public class Notification {
 
     @Enumerated(EnumType.STRING)
     private NotificationStatus notificationStatus;
+
+    @Enumerated(EnumType.STRING)
+    private NotificationCategory notificationCategory;
 
     @Enumerated(EnumType.STRING)
     private NotificationType notificationType;

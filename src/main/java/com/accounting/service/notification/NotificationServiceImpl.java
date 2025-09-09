@@ -8,8 +8,8 @@ import com.accounting.dto.pagination.PaginationDTO;
 import com.accounting.entity.Client;
 import com.accounting.entity.Notification;
 import com.accounting.entity.enums.ContextType;
+import com.accounting.entity.enums.NotificationCategory;
 import com.accounting.entity.enums.NotificationStatus;
-import com.accounting.entity.enums.NotificationType;
 import com.accounting.repository.NotificationRepository;
 import com.accounting.service.clients.ClientService;
 import com.accounting.service.comment.CommentService;
@@ -38,7 +38,7 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setCreateDate(new Date());
         notification.setContextType(contextType);
         notification.setContextId(contextId);
-        notification.setNotificationType(NotificationType.NEW);
+        notification.setNotificationCategory(NotificationCategory.NEW);
         notification.setNotificationStatus(NotificationStatus.UNSEEN);
 
         return notificationRepository.save(notification);
@@ -48,10 +48,11 @@ public class NotificationServiceImpl implements NotificationService {
         Notification notification = notificationRepository.findById(notificationId).orElseThrow(() ->
                 new EntityNotFoundException("No notification found for notificationId: " + notificationId));
 
-        if (NotificationType.NEW.equals(notification.getNotificationType())) {
-            notification.setNotificationType(NotificationType.ACTIVE);
-        } else if (NotificationType.ACTIVE.equals(notification.getNotificationType())) {
-            notification.setNotificationType(NotificationType.ARCHIVED);
+        if (NotificationCategory.NEW.equals(notification.getNotificationCategory())) {
+            notification.setNotificationCategory(NotificationCategory.ACTIVE);
+            notification.setNotificationStatus(NotificationStatus.SEEN);
+        } else if (NotificationCategory.ACTIVE.equals(notification.getNotificationCategory())) {
+            notification.setNotificationCategory(NotificationCategory.ARCHIVED);
         }
 
         if (message != null)
@@ -72,11 +73,8 @@ public class NotificationServiceImpl implements NotificationService {
         Pageable pageable = PageRequest.of(page, size);
         Page<Notification> notificationPage;
 
-//        if (input == null || input.isBlank()) {
-//            notificationPage = notificationRepository.findAllActiveReservations(pageable);
-//        } else {
+//        if (input != null && !input.isBlank())
         notificationPage = notificationRepository.findByClientNameOrPhone(input.trim(), pageable);
-//        }
 
         List<NotificationDTO> dtoList = notificationPage.getContent()
                 .stream()
@@ -96,15 +94,15 @@ public class NotificationServiceImpl implements NotificationService {
     public NotificationDataDTO getNotificationsCategories() {
         NotificationDataDTO notificationDataDTO = new NotificationDataDTO();
 
-        notificationDataDTO.setArchiveList(getNotificationsByType(NotificationType.ARCHIVED));
-        notificationDataDTO.setActiveList(getNotificationsByType(NotificationType.ACTIVE));
-        notificationDataDTO.setUrgentList(getNotificationsByType(NotificationType.NEW));
+        notificationDataDTO.setArchiveList(getNotificationsByType(NotificationCategory.ARCHIVED));
+        notificationDataDTO.setActiveList(getNotificationsByType(NotificationCategory.ACTIVE));
+        notificationDataDTO.setUrgentList(getNotificationsByType(NotificationCategory.NEW));
 
         return notificationDataDTO;
     }
 
-    private List<NotificationDTO> getNotificationsByType(NotificationType status) {
-        return mapToListDto(notificationRepository.findByNotificationType(status));
+    private List<NotificationDTO> getNotificationsByType(NotificationCategory status) {
+        return mapToListDto(notificationRepository.findByNotificationCategory(status));
     }
 
     private List<NotificationDTO> mapToListDto(List<Notification> notifications) {
@@ -129,6 +127,7 @@ public class NotificationServiceImpl implements NotificationService {
         notificationDTO.setContextId(notification.getContextId());
         notificationDTO.setNotificationStatus(notification.getNotificationStatus().toString());
         notificationDTO.setNotificationType(notification.getNotificationType().toString());
+        notificationDTO.setNotificationCategory(notification.getNotificationCategory().toString());
         return notificationDTO;
     }
 }
