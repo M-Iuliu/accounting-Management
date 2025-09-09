@@ -32,12 +32,15 @@ public class Notification {
     private Long contextId;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private NotificationStatus notificationStatus;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "category")
     private NotificationCategory notificationCategory;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "type")
     private NotificationType notificationType;
 
     private String message;

@@ -113,10 +113,12 @@ public class ReservationServiceHelper {
 
         reservation.setDepartureDate(reservationForm.getDepartureDate());
         reservation.setReturnDate(reservationForm.getReturnDate());
-        reservation.setRoomNo(reservationForm.getRoomNo());
+
         reservation.setDestination(reservationForm.getDestination());
-        reservation.setHotel(reservationForm.getHotel());
         reservation.setTransport(reservationForm.getTransport());
+        reservation.setHotel(reservationForm.getHotel());
+        reservation.setRoomNo(reservationForm.getRoomNo());
+
         reservation.setPrice(reservationForm.getTotalPrice());
         reservation.setReceipted(reservationForm.getRemainingCost());
         reservation.setPaymentDueDate(reservationForm.getPaymentDeadlineDate());

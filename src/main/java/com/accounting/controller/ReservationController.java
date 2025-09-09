@@ -57,6 +57,7 @@ public class ReservationController {
         }
     }
 
+    //TODO: Add endpoint for CreateReservation without a base_offer -> select client, no offerId
 
     @PatchMapping("/{id}")
     public ResponseEntity<?> patchReservation(@PathVariable Long id, @RequestBody ReservationPatchDTO patch) {

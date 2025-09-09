@@ -26,13 +26,13 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Query("SELECT r FROM Reservation r WHERE r.isDeleted is null")
     List<Reservation> findAllActiveReservations();
 
-    @Query("SELECT r FROM Reservation r WHERE r.returnDate = :targetDate AND r.isActive = true")
+    @Query("SELECT r FROM Reservation r WHERE r.returnDate = :targetDate AND r.isDeleted is null")
     List<Reservation> findReservationsWithReturnDate(@Param("targetDate") Date targetDate);
 
-    @Query("SELECT r FROM Reservation r WHERE r.departureDate = :targetDate AND r.isActive = true")
+    @Query("SELECT r FROM Reservation r WHERE r.departureDate = :targetDate AND r.isDeleted is null")
     List<Reservation> findReservationsWithDepartureDate(@Param("targetDate") Date targetDate);
 
-    @Query("SELECT r FROM Reservation r WHERE r.paymentDueDate = :targetDate AND r.isActive = true")
+    @Query("SELECT r FROM Reservation r WHERE r.paymentDueDate = :targetDate AND r.isDeleted is null")
     List<Reservation> findReservationsWithPaymentDueDate(@Param("targetDate") Date targetDate);
 
 }

@@ -19,6 +19,7 @@ public class OfferServiceHelper {
         output.setDestination(input.getDestination());
         output.setPeriod(input.getPeriod());
         output.setBudget(input.getBudget());
+        output.setStatus(input.getStatus());
         //TODO: same notification/obs system as in reservation?
         output.setObs(input.getObs());
         return output;

@@ -59,7 +59,7 @@ public class OfferServiceImp implements OfferService{
         Pageable pageable = PageRequest.of(page, size);
         Page<Offer> offerPage;
         if (input == null || input.isBlank()) {
-            offerPage = offerRepository.findAllActiveClients(pageable);
+            offerPage = offerRepository.findAllActiveOffers(pageable);
         } else {
             offerPage = offerRepository.findByFilter(input.trim(), pageable);
         }

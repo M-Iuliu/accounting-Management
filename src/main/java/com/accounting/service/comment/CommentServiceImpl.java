@@ -25,6 +25,8 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = new Comment();
         comment.setMessage(dto.getMessage());
         comment.setDate(new Date());
+
+        //TODO: Check that offer/reservation with ID exists
         comment.setContextType(ContextType.valueOf(dto.getContextType()));
         comment.setContextId(dto.getContextId());
         comment.setCommentType(CommentType.valueOf(dto.getCommentType()));

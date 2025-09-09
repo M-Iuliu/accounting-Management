@@ -49,7 +49,7 @@ public class ReservationServiceImp implements ReservationService {
     public void createReservation(ReservationForm reservationForm, Offer offer) throws ClientNotFoundException {
         Reservation reservation = ReservationServiceHelper.mapReservationFormToEntity(reservationForm);
         reservation.setOffer(offer);
-        reservation.setClient(clientService.findById(reservationForm.getClientId()));
+        reservation.setClient(offer.getClient());
         reservation.setProvider(providerService.findById(reservationForm.getProviderId()));
 
         reservation.setParticipants(
@@ -69,7 +69,7 @@ public class ReservationServiceImp implements ReservationService {
     public ReservationDTO getReservation(Long reservationId) {
         Reservation reservation = findById(reservationId);
         ReservationDTO reservationDTO = reservationServiceHelper.mapEntityToReservationDTO(reservation);
-        reservationDTO.setClient(clientService.mapToShortDto(reservation.getClient()));
+        reservationDTO.setClient(clientService.mapToShortDto(reservation.getClient()));// change to ClientServiceHelper ?
         return reservationDTO;
     }
 

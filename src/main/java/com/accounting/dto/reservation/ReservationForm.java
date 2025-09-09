@@ -1,6 +1,5 @@
 package com.accounting.dto.reservation;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,12 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReservationForm {
-
-    @NotNull
-    private Long clientId;
-
-    @NotNull
-    private Long offerId;
 
     private List<ReservationParticipantDTO> participants;
     private Date departureDate;

@@ -1,7 +1,10 @@
 package com.accounting.dto.offer;
 
+import com.accounting.constants.OfferStatusEnum;
 import com.accounting.dto.client.ClientShortDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,5 +19,7 @@ public class OfferShortDTO {
     private String destination;
     private String period;
     private double budget;
+    @Enumerated(EnumType.STRING)
+    private OfferStatusEnum status;
     private String obs;
 }
