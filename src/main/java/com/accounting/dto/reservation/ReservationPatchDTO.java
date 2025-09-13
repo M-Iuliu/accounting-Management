@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,8 +14,8 @@ import java.util.Date;
 @ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ReservationPatchDTO {
-    private Date departureDate;
-    private Date returnDate;
+    private LocalDate departureDate;
+    private LocalDate returnDate;
     private String destination;
     private String hotel;
     private Integer roomNo;
@@ -23,7 +23,7 @@ public class ReservationPatchDTO {
     private Double price;
     private Double receipted;
     private Double balance;
-    private Date balanceDueDate;
+    private LocalDate balanceDueDate;
     private String currency;
     private Long providerId;
 }

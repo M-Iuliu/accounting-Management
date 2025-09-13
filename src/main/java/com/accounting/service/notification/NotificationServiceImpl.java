@@ -21,7 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -36,7 +36,7 @@ public class NotificationServiceImpl implements NotificationService {
         Notification notification = new Notification();
         notification.setClient(client);
         notification.setMessage(message);
-        notification.setCreateDate(new Date());
+        notification.setCreateDate(LocalDate.now());
         notification.setContextType(contextType);
         notification.setContextId(contextId);
         notification.setNotificationCategory(NotificationCategory.NEW);

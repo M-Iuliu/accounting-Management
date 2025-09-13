@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
@@ -23,7 +23,7 @@ public class NotificationDTO {
     private String notificationType;
     private String notificationCategory;
     private String message;
-    private Date createDate;
-    private Date updateDate;
+    private LocalDate createDate;
+    private LocalDate updateDate;
     private List<CommentDTO> commentList;
 }

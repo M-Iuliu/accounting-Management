@@ -2,7 +2,7 @@ package com.accounting.dto.offer;
 
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -12,7 +12,7 @@ import java.util.Date;
 public class OfferForm {
 
     private Long clientId;
-    private Date offerDate;
+    private LocalDate offerDate;
     private int adultsNb;
     private int childrenNb;
     private String destination;

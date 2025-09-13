@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -64,7 +63,7 @@ public class NotificationSchedulerService {
     }
 
     private void markActiveNotificationToArchive(LocalDate now) {
-        Date daysOlder2 = Date.from(now.minusDays(2).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        LocalDate daysOlder2 = LocalDate.from(now.minusDays(2).atStartOfDay(ZoneId.systemDefault()));
         List<Notification> updatedNotificationList = new ArrayList<>();
 
         notificationRepository.findNotificationToArchive(daysOlder2, NotificationCategory.ACTIVE)
@@ -79,7 +78,7 @@ public class NotificationSchedulerService {
     }
 
     private void generateReturnDateNotifications(LocalDate now) {
-        Date daysOlder2 = Date.from(now.minusDays(2).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        LocalDate daysOlder2 = LocalDate.from(now.minusDays(2).atStartOfDay(ZoneId.systemDefault()));
         List<Reservation> reservations = reservationRepository.findReservationsWithReturnDate(daysOlder2);
 
         reservations.forEach(r -> {
@@ -101,7 +100,7 @@ public class NotificationSchedulerService {
     }
 
     private void generateDepartureDateNotifications(LocalDate now) {
-        Date in1Day = Date.from(now.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        LocalDate in1Day = LocalDate.from(now.plusDays(1).atStartOfDay(ZoneId.systemDefault()));
         List<Reservation> reservations = reservationRepository.findReservationsWithDepartureDate(in1Day);
 
         reservations.forEach(r -> {
@@ -123,7 +122,7 @@ public class NotificationSchedulerService {
     }
 
     private void generatePaymentDueDateNotifications(LocalDate now) {
-        Date in2Days = Date.from(now.plusDays(2).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        LocalDate in2Days = LocalDate.from(now.plusDays(2).atStartOfDay(ZoneId.systemDefault()));
         List<Reservation> reservations = reservationRepository.findReservationsWithPaymentDueDate(in2Days);
 
         reservations.forEach(r -> {
@@ -145,7 +144,7 @@ public class NotificationSchedulerService {
     }
 
     private void generateOfferNotifications(LocalDate now) {
-        Date daysOlder2 = Date.from(now.minusDays(2).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        LocalDate daysOlder2 = LocalDate.from(now.minusDays(2).atStartOfDay(ZoneId.systemDefault()));
         List<Offer> offers = offerRepository.findOffersOlderThan(daysOlder2);
 
         offers.forEach(offer -> {

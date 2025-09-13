@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,8 +39,8 @@ public class Reservation {
     private String bookingRef;
     private Date bookedDate;
 
-    private Date departureDate;//editable
-    private Date returnDate;//editable
+    private LocalDate departureDate;//editable
+    private LocalDate returnDate;//editable
 
     private String destination;//editable
     private String hotel;//editable
@@ -49,7 +50,7 @@ public class Reservation {
     private double price;//editable
     private double receipted;//editable
     private double balance;//editable
-    private Date paymentDueDate;//editable
+    private LocalDate paymentDueDate;//editable
     private String currency;//editable
 
     @ManyToOne

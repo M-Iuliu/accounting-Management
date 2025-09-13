@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -13,8 +13,8 @@ import java.util.List;
 public class ReservationForm {
 
     private List<ReservationParticipantDTO> participants;
-    private Date departureDate;
-    private Date returnDate;
+    private LocalDate departureDate;
+    private LocalDate returnDate;
     private int personsNumber;
     private int roomNo;
     private String destination;
@@ -24,6 +24,6 @@ public class ReservationForm {
     private double advance;
     private double remainingCost;
     private String currency;
-    private Date paymentDeadlineDate;
+    private LocalDate paymentDeadlineDate;
     private Long providerId;
 }

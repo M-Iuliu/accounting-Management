@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 
 @Entity
@@ -45,8 +45,8 @@ public class Notification {
 
     private String message;
 
-    private Date createDate;
+    private LocalDate createDate;
 
-    private Date updateDate;
+    private LocalDate updateDate;
 
 }

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -28,5 +28,5 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
             "WHERE o.deletionDate is NULL " +
             "AND o.status = 'OFERTAT' " +
             "AND o.offerDate = :targetDate")
-    List<Offer> findOffersOlderThan(@Param("targetDate") Date targetDate);
+    List<Offer> findOffersOlderThan(@Param("targetDate") LocalDate targetDate);
 }

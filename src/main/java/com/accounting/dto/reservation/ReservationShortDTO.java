@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,13 +18,13 @@ public class ReservationShortDTO { // only fields required for UI table display
     private Long reservationId;
     private ClientShortDTO client;
     private String bookingRef;
-    private Date departureDate;
-    private Date returnDate;
+    private LocalDate departureDate;
+    private LocalDate returnDate;
     private int personNo;
     private int roomNo;
     private double price;
     private double receipted;
     private double balance;
-    private Date balanceDueDate;
+    private LocalDate balanceDueDate;
     private String currency;
 }

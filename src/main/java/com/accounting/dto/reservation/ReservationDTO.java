@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -27,8 +28,8 @@ public class ReservationDTO {
     private String bookingRef;
     private Date bookedDate;
 
-    private Date departureDate;
-    private Date returnDate;
+    private LocalDate departureDate;
+    private LocalDate returnDate;
     //    private int personsNumber;
     private int roomNo;
     private String destination;
@@ -37,7 +38,7 @@ public class ReservationDTO {
     private double price;
     private double receipted;
     private double balance;
-    private Date balanceDueDate;
+    private LocalDate balanceDueDate;
     private String currency;
     private ProviderDTO providerDTO;
     private List<String> uploadedFiles;

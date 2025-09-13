@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -24,7 +25,7 @@ public class Offer {
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
 
-    private Date offerDate;
+    private LocalDate offerDate;
     private int adultsNo;
     private int childrenNo;
     //    private int personsNumber;
