@@ -4,6 +4,7 @@ import com.accounting.dto.notification.NotificationDTO;
 import com.accounting.dto.notification.NotificationDataDTO;
 import com.accounting.dto.pagination.PageDTO;
 import com.accounting.exeption.ErrorResponse;
+import com.accounting.service.notification.NotificationSchedulerService;
 import com.accounting.service.notification.NotificationService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,9 @@ public class NotificationController {
     @Autowired
     private final NotificationService notificationService;
 
+    @Autowired
+    private final NotificationSchedulerService schedulerService;
+
     @GetMapping()
     public ResponseEntity<?> getNotifications() {
         try {
@@ -37,6 +41,22 @@ public class NotificationController {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ErrorResponse("An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR.value()));
+        }
+    }
+
+    @PostMapping()
+    public ResponseEntity<?> startCronJobs() {
+        try {
+            schedulerService.generateNotifications();
+            return ResponseEntity.noContent().build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("Notifications not found", HttpStatus.NOT_FOUND.value()));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse(String.format("An unexpected error occurred: [%s]", e), HttpStatus.INTERNAL_SERVER_ERROR.value()));
         }
     }
 

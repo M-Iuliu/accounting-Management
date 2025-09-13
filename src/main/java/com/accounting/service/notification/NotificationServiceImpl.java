@@ -10,6 +10,7 @@ import com.accounting.entity.Notification;
 import com.accounting.entity.enums.ContextType;
 import com.accounting.entity.enums.NotificationCategory;
 import com.accounting.entity.enums.NotificationStatus;
+import com.accounting.entity.enums.NotificationType;
 import com.accounting.repository.NotificationRepository;
 import com.accounting.service.clients.ClientService;
 import com.accounting.service.comment.CommentService;
@@ -31,7 +32,7 @@ public class NotificationServiceImpl implements NotificationService {
     private final ClientService clientService;
     private final CommentService commentService;
 
-    public Notification createNotification(Client client, String message, ContextType contextType, Long contextId) {
+    public Notification createNotification(Client client, String message, ContextType contextType, Long contextId, NotificationType type) {
         Notification notification = new Notification();
         notification.setClient(client);
         notification.setMessage(message);
@@ -40,6 +41,7 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setContextId(contextId);
         notification.setNotificationCategory(NotificationCategory.NEW);
         notification.setNotificationStatus(NotificationStatus.UNSEEN);
+        notification.setNotificationType(type);
 
         return notificationRepository.save(notification);
     }

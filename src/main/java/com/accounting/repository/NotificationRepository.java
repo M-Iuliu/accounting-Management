@@ -19,13 +19,13 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     List<Notification> findByNotificationCategory(NotificationCategory status);
 
     boolean existsByContextTypeAndContextIdAndNotificationType(
-            String contextType,
+            ContextType contextType,
             Long contextId,
             NotificationType notificationCategory
     );
 
 
-    @Query("SELECT n FROM Notification n WHERE n.updateDate = :targetDate AND n.notificationType = :notifType")
+    @Query("SELECT n FROM Notification n WHERE n.updateDate = :targetDate AND n.notificationCategory = :notifType")
     List<Notification> findNotificationToArchive(@Param("targetDate") Date targetDate,
                                                  @Param("notifType") NotificationCategory notifType);
 

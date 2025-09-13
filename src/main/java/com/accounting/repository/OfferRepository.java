@@ -25,8 +25,8 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
     Page<Offer> findAllActiveOffers(Pageable pageable);
 
     @Query("SELECT o FROM Offer o " +
-            "WHERE o.isDeleted = false " +
+            "WHERE o.deletionDate is NULL " +
             "AND o.status = 'OFERTAT' " +
-            "AND o.offerDate <= :targetDate")
+            "AND o.offerDate = :targetDate")
     List<Offer> findOffersOlderThan(@Param("targetDate") Date targetDate);
 }

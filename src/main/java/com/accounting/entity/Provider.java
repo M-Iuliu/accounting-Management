@@ -2,9 +2,7 @@ package com.accounting.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 import java.util.List;
@@ -26,6 +24,8 @@ public class Provider {
 
     @JsonIgnore
     @OneToMany(mappedBy = "provider", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<Reservation> reservationList;
 
     private Boolean isDeleted;

@@ -54,7 +54,6 @@ public class NotificationSchedulerService {
      */
     @Scheduled(cron = "0 0 8 * * *")
     public void generateNotifications() {
-        List<Reservation> allReservations = reservationRepository.findAllActiveReservations();
         LocalDate now = LocalDate.now();
 
         generateReturnDateNotifications(now);
@@ -74,8 +73,9 @@ public class NotificationSchedulerService {
                     updatedNotificationList.add(notification);
                 });
 
-        if (!updatedNotificationList.isEmpty())
+        if (!updatedNotificationList.isEmpty()) {
             notificationRepository.saveAll(updatedNotificationList);
+        }
     }
 
     private void generateReturnDateNotifications(LocalDate now) {
@@ -86,7 +86,7 @@ public class NotificationSchedulerService {
             Client client = r.getClient();
 
             boolean exists = notificationRepository.existsByContextTypeAndContextIdAndNotificationType(
-                    ContextType.RESERVATION.name(),
+                    ContextType.RESERVATION,
                     r.getReservationId(),
                     NotificationType.RESERVATION_RETURN
             );
@@ -95,7 +95,7 @@ public class NotificationSchedulerService {
             if (!exists) {
                 notificationService.createNotification(client,
                         String.format("Clientul %s s-a intors de 2 zile din vacanta.", client.getFullName()),
-                        ContextType.RESERVATION, r.getReservationId());
+                        ContextType.RESERVATION, r.getReservationId(), NotificationType.RESERVATION_RETURN);
             }
         });
     }
@@ -108,7 +108,7 @@ public class NotificationSchedulerService {
             Client client = r.getClient();
 
             boolean exists = notificationRepository.existsByContextTypeAndContextIdAndNotificationType(
-                    ContextType.RESERVATION.name(),
+                    ContextType.RESERVATION,
                     r.getReservationId(),
                     NotificationType.RESERVATION_DEPARTURE
             );
@@ -117,7 +117,7 @@ public class NotificationSchedulerService {
             if (!exists) {
                 notificationService.createNotification(client,
                         String.format("Clientul %s pleaca maine in vacanta.", client.getFullName()),
-                        ContextType.RESERVATION, r.getReservationId());
+                        ContextType.RESERVATION, r.getReservationId(), NotificationType.RESERVATION_DEPARTURE);
             }
         });
     }
@@ -130,7 +130,7 @@ public class NotificationSchedulerService {
             Client client = r.getClient();
 
             boolean exists = notificationRepository.existsByContextTypeAndContextIdAndNotificationType(
-                    ContextType.RESERVATION.name(),
+                    ContextType.RESERVATION,
                     r.getReservationId(),
                     NotificationType.RESERVATION_PAYMENT
             );
@@ -139,7 +139,7 @@ public class NotificationSchedulerService {
             if (!exists) {
                 notificationService.createNotification(client,
                         String.format("Ziua de plata este in 2 zile pentru clientul %s.", client.getFullName()),
-                        ContextType.RESERVATION, r.getReservationId());
+                        ContextType.RESERVATION, r.getReservationId(), NotificationType.RESERVATION_PAYMENT);
             }
         });
     }
@@ -157,7 +157,7 @@ public class NotificationSchedulerService {
             );
 
             boolean exists = notificationRepository.existsByContextTypeAndContextIdAndNotificationType(
-                    "offer",
+                    ContextType.OFFER,
                     offer.getOfferId(),
                     NotificationType.OFFER
             );
@@ -168,8 +168,8 @@ public class NotificationSchedulerService {
                         offer.getClient(),
                         message,
                         ContextType.OFFER,
-                        offer.getOfferId()
-                );
+                        offer.getOfferId(),
+                        NotificationType.OFFER);
             }
         });
     }
