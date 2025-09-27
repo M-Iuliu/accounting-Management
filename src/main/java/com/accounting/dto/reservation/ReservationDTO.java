@@ -34,7 +34,7 @@ public class ReservationDTO {
     private int roomNo;
     private String destination;
     private String hotel;
-    private String transport;
+    private String transportType;
     private double price;
     private double receipted;
     private double balance;

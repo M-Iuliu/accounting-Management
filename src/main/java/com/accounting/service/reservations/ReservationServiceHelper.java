@@ -58,7 +58,7 @@ public class ReservationServiceHelper {
         dto.setRoomNo(reservation.getRoomNo());
         dto.setDestination(reservation.getDestination());
         dto.setHotel(reservation.getHotel());
-        dto.setTransport(reservation.getTransport());
+        dto.setTransportType(reservation.getTransport());
 
         dto.setPrice(reservation.getPrice());
         dto.setReceipted(reservation.getReceipted());
