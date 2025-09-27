@@ -23,9 +23,9 @@ public class ProviderServiceHelper {
        ProviderDTO output = new ProviderDTO();
 
        output.setProviderId(provider.getProviderId());
-        output.setProviderName(provider.getProviderName() != null ? provider.getProviderName() : null);
+        output.setName(provider.getProviderName() != null ? provider.getProviderName() : null);
         output.setTelephone(provider.getTelephone() != null ? provider.getTelephone() : null);
-        output.setEmail(provider.getEmail() != null ? provider.getEmail() : null);
+        output.setContactEmail(provider.getEmail() != null ? provider.getEmail() : null);
         output.setWebLink(provider.getWebLink() != null ? provider.getWebLink() : null);
        return output;
    }

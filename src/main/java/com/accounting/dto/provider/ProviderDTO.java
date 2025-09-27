@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class ProviderDTO {
     private Long providerId;
     private String telephone;
-    private String providerName;
+    private String name;
     private String webLink;
-    private String email;
+    private String contactEmail;
 }
