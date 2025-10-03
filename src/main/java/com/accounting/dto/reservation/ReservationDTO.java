@@ -40,7 +40,7 @@ public class ReservationDTO {
     private double balance;
     private LocalDate balanceDueDate;
     private String currency;
-    private ProviderDTO providerDTO;
+    private ProviderDTO provider;
     private List<String> uploadedFiles;
     private List<CommentDTO> commentList;
 

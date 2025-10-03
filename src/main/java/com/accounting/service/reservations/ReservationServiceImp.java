@@ -70,6 +70,7 @@ public class ReservationServiceImp implements ReservationService {
         Reservation reservation = findById(reservationId);
         ReservationDTO reservationDTO = reservationServiceHelper.mapEntityToReservationDTO(reservation);
         reservationDTO.setClient(clientService.mapToShortDto(reservation.getClient()));// change to ClientServiceHelper ?
+        reservationDTO.setProvider(providerService.mapToDto(reservation.getProvider()));
         return reservationDTO;
     }
 
