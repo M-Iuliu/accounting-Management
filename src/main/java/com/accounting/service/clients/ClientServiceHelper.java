@@ -29,6 +29,7 @@ public class ClientServiceHelper {
         output.setSurname(input.getSurname());
         output.setTelephone(input.getTelephone());
         output.setEmail(input.getEmail());
+        output.setObs(input.getObs());
 
         return output;
     }
@@ -49,6 +50,7 @@ public class ClientServiceHelper {
         if (patch.getName() != null) client.setName(patch.getName());
         if (patch.getTelephone() != null) client.setTelephone(patch.getTelephone());
         if (patch.getEmail() != null) client.setEmail(patch.getEmail());
+        if (patch.getObs() != null) client.setObs(patch.getObs());
     }
 
 

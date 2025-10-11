@@ -14,5 +14,6 @@ public class ClientAddEditForm {
     private String surname;
     private String telephone;
     private String email;
+    private String obs;
 
 }
