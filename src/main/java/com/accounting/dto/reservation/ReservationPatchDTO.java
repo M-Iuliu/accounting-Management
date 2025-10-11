@@ -19,7 +19,7 @@ public class ReservationPatchDTO {
     private String destination;
     private String hotel;
     private Integer roomNo;
-    private String transport;
+    private String transportType; //TODO: Maybe Enum
     private Double price;
     private Double receipted;
     private Double balance;

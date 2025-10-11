@@ -155,7 +155,7 @@ public class ReservationServiceHelper {
         if (patch.getDestination() != null) reservation.setDestination(patch.getDestination());
         if (patch.getHotel() != null) reservation.setHotel(patch.getHotel());
         if (patch.getRoomNo() != null) reservation.setRoomNo(patch.getRoomNo());
-        if (patch.getTransport() != null) reservation.setTransport(patch.getTransport());
+        if (patch.getTransportType() != null) reservation.setTransport(patch.getTransportType());
         if (patch.getPrice() != null) reservation.setPrice(patch.getPrice());
         if (patch.getReceipted() != null) reservation.setReceipted(patch.getReceipted());
         if (patch.getBalance() != null) reservation.setBalance(patch.getBalance());
