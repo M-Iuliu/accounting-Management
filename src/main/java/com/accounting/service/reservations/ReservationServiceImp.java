@@ -74,14 +74,14 @@ public class ReservationServiceImp implements ReservationService {
         return reservationDTO;
     }
 
-    public PageDTO getReservations(String input, int page, int size) {
+    public PageDTO getReservations(Integer clientID, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Reservation> reservationPage;
 
-        if (input == null || input.isBlank()) {
+        if (clientID == null) {
             reservationPage = reservationRepository.findAllActiveReservations(pageable);
         } else {
-            reservationPage = reservationRepository.findByNameOrPhone(input.trim(), pageable);
+            reservationPage = reservationRepository.findByReservationsByClient(clientID, pageable);
         }
 
         List<ReservationShortDTO> reservationList = reservationPage.getContent()

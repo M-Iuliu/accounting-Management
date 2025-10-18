@@ -13,12 +13,9 @@ import java.util.List;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
     @Query("SELECT r FROM Reservation r " +
-            "JOIN r.client c " +
             "WHERE r.isDeleted is null " +
-            "AND ((LOWER(c.name) LIKE LOWER(CONCAT('%', :input, '%')) " +
-            "OR LOWER(c.surname) LIKE LOWER(CONCAT('%', :input, '%')) " +
-            "OR c.telephone LIKE CONCAT('%', :input, '%')))")
-    Page<Reservation> findByNameOrPhone(@Param("input") String input, Pageable pageable);
+            "AND r.client.clientId = :clientId")
+    Page<Reservation> findByReservationsByClient(@Param("clientId") Integer clientId, Pageable pageable);
 
     @Query("SELECT r FROM Reservation r WHERE r.isDeleted is null")
     Page<Reservation> findAllActiveReservations(Pageable pageable);

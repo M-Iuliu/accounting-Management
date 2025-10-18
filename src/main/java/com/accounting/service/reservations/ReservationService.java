@@ -12,7 +12,7 @@ public interface ReservationService {
 
     ReservationDTO getReservation(Long reservationId);
 
-    PageDTO getReservations(String input, int page, int size);
+    PageDTO getReservations(Integer clientId, int page, int size);
 
     ReservationDTO patchReservation(Long id, ReservationPatchDTO patch);
 

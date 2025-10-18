@@ -24,11 +24,11 @@ public class ReservationController {
 
     @GetMapping()
     public ResponseEntity<?> getReservationsWithPagination(
-            @RequestParam(required = false) String input,
+            @RequestParam(required = false) Integer clientId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
         try{
-            PageDTO reservationsWithPagination = reservationService.getReservations(input, page, size);
+            PageDTO reservationsWithPagination = reservationService.getReservations(clientId, page, size);
             return ResponseEntity.ok(reservationsWithPagination);
         } catch (EntityNotFoundException e) {
             return ResponseEntity
