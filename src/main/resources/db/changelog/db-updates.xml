@@ -126,6 +126,18 @@
         <dropNotNullConstraint tableName="reservation" columnName="offer_id"/>
     </changeSet>
 
+
+    <changeSet author="andreea" id="offer-add-currency-29">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="offer" columnName="currency"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="offer">
+            <column name="currency" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
     <!--    <changeSet id="add-notification-update-date" author="emi">-->
     <!--        <addColumn tableName="notification">-->
     <!--            <column name="update_date" type="TIMESTAMP WITHOUT TIME ZONE"/>-->

@@ -31,6 +31,7 @@ public class Offer {
     //    private int personsNumber;
     private String destination;
     private String period;
+    private String currency;
     private double budget;
     private double grossPrice;
     private double advance;

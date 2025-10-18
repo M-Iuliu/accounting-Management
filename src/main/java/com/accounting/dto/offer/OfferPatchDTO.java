@@ -11,10 +11,11 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OfferPatchDTO {
     //TODO: Check if client can be changed on edit offer
-    private Integer adultsNb;
-    private Integer childrenNb;
+    private Integer adultsNo;
+    private Integer childrenNo;
     private String destination;
     private String period;
+    private String currency;
     private Double budget;
     private Double grossPrice;
     private Double advance;

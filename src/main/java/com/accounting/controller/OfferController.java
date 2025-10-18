@@ -65,7 +65,7 @@ public class OfferController {
         return ResponseEntity.status(HttpStatus.CREATED).body(offerService.createOffer(offerForm));
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> patchOffer(@PathVariable Long id, @RequestBody OfferPatchDTO patchDTO) {
         try {
             OfferDTO updatedOffer = offerService.patchOffer(id, patchDTO);
@@ -81,7 +81,7 @@ public class OfferController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<?> updateOfferStatus(@PathVariable Long id, @RequestBody OfferUpdateStatusDTO updates) {
         try {
             //TODO: re-check ok http status for update

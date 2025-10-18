@@ -16,10 +16,11 @@ import lombok.NoArgsConstructor;
 public class OfferDTO {
     private Long offerId;
     private ClientShortDTO client;
-    private int adultsNb;
-    private int childrenNb;
+    private int adultsNo;
+    private int childrenNo;
     private String destination;
     private String period;
+    private String currency;
     private double budget;
     private double grossPrice;
     private double advance;

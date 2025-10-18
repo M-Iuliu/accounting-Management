@@ -29,10 +29,11 @@ public class OfferServiceHelper {
         OfferDTO output = new OfferDTO();
 
         output.setOfferId(input.getOfferId());
-        output.setAdultsNb(input.getAdultsNo());
-        output.setChildrenNb(input.getChildrenNo());
+        output.setAdultsNo(input.getAdultsNo());
+        output.setChildrenNo(input.getChildrenNo());
         output.setDestination(input.getDestination());
         output.setPeriod(input.getPeriod());
+        output.setCurrency(input.getCurrency());
         output.setBudget(input.getBudget());
         output.setGrossPrice(input.getGrossPrice());
         output.setAdvance(input.getAdvance());
@@ -46,10 +47,11 @@ public class OfferServiceHelper {
 
     public static void patchOffer(OfferPatchDTO patch, Offer offer) {
 
-        if (patch.getAdultsNb() != null) offer.setAdultsNo(patch.getAdultsNb());
-        if (patch.getChildrenNb() != null) offer.setChildrenNo(patch.getChildrenNb());
+        if (patch.getAdultsNo() != null) offer.setAdultsNo(patch.getAdultsNo());
+        if (patch.getChildrenNo() != null) offer.setChildrenNo(patch.getChildrenNo());
         if (patch.getDestination() != null) offer.setDestination(patch.getDestination());
         if (patch.getPeriod() != null) offer.setPeriod(patch.getPeriod());
+        if (patch.getCurrency() != null) offer.setCurrency(patch.getCurrency());
         if (patch.getBudget() != null) offer.setBudget(patch.getBudget());
         if (patch.getGrossPrice() != null) offer.setGrossPrice(patch.getGrossPrice());
         if (patch.getAdvance() != null) offer.setAdvance(patch.getAdvance());
@@ -61,8 +63,8 @@ public class OfferServiceHelper {
     public Offer mapOfferFormToOffer(OfferForm input){
         Offer output = new Offer();
         output.setOfferDate(input.getOfferDate() != null ? input.getOfferDate() : LocalDate.now());
-        output.setAdultsNo(input.getAdultsNb());
-        output.setChildrenNo(input.getChildrenNb());
+        output.setAdultsNo(input.getAdultsNo());
+        output.setChildrenNo(input.getChildrenNo());
         output.setDestination(input.getDestination());
         output.setPeriod(input.getPeriod());
         output.setBudget(input.getBudget());

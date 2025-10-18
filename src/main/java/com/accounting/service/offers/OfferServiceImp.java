@@ -64,10 +64,10 @@ public class OfferServiceImp implements OfferService{
             offerPage = offerRepository.findByFilter(input.trim(), pageable);
         }
 
-        List<OfferShortDTO> offersList = offerPage.getContent()
+        List<OfferDTO> offersList = offerPage.getContent()
                 .stream()
                 .map(offer -> {
-                    OfferShortDTO offerDto = offerServiceHelper.mapOfferToOfferShortDTO(offer);
+                    OfferDTO offerDto = offerServiceHelper.mapOfferToOfferDTO(offer);
                     offerDto.setClient(clientService.mapToShortDto(offer.getClient()));
                     return offerDto;
                 })
