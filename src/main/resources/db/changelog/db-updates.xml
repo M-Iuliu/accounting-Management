@@ -29,7 +29,6 @@
             ALTER TABLE offer
             ALTER COLUMN offer_date TYPE DATE USING offer_date::date;
         </sql>
-        <!--        <modifyDataType tableName="offer" columnName="offer_date" newDataType="DATE"/>-->
     </changeSet>
 
     <changeSet author="andreea" id="reservation-alter-date-12">
@@ -109,6 +108,14 @@
 
         <modifyDataType tableName="reservation" columnName="payment_due_date" newDataType="DATE"/>
 
+    </changeSet>
+
+
+    <changeSet author="andreea" id="reservation-booked-alter-date-27">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="reservation" columnName="booked_date"/>
+        </preConditions>
+        <modifyDataType tableName="reservation" columnName="booked_date" newDataType="DATE"/>
     </changeSet>
 
     <!--    <changeSet id="add-notification-update-date" author="emi">-->

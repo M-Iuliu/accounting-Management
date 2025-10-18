@@ -1,5 +1,6 @@
 package com.accounting.service.reservations;
 
+import com.accounting.dto.CommentDTO;
 import com.accounting.dto.pagination.PageDTO;
 import com.accounting.dto.pagination.PaginationDTO;
 import com.accounting.dto.reservation.ReservationDTO;
@@ -9,6 +10,8 @@ import com.accounting.dto.reservation.ReservationShortDTO;
 import com.accounting.entity.Offer;
 import com.accounting.entity.Provider;
 import com.accounting.entity.Reservation;
+import com.accounting.entity.enums.CommentType;
+import com.accounting.entity.enums.ContextType;
 import com.accounting.exeption.ClientNotFoundException;
 import com.accounting.repository.ReservationRepository;
 import com.accounting.service.clients.ClientService;
@@ -21,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -46,19 +50,38 @@ public class ReservationServiceImp implements ReservationService {
     }
 
     @Transactional
-    public void createReservation(ReservationForm reservationForm, Offer offer) throws ClientNotFoundException {
+    public ReservationDTO createReservation(ReservationForm reservationForm, Offer offer) throws ClientNotFoundException {
         Reservation reservation = ReservationServiceHelper.mapReservationFormToEntity(reservationForm);
-        reservation.setOffer(offer);
-        reservation.setClient(offer.getClient());
+        boolean withOffer = offer != null;
+        if(withOffer) {
+            reservation.setOffer(offer);
+        }
+        reservation.setClient(clientService.findById(reservationForm.getClientId()));
         reservation.setProvider(providerService.findById(reservationForm.getProviderId()));
 
         reservation.setParticipants(
                 mapToReservationParticipant(reservation, reservationForm.getParticipants()));
 
-        reservation.setBookedDate(new Date());
+        reservation.setBookedDate(
+                reservationForm.getBookedDate() == null ? LocalDate.now() : reservationForm.getBookedDate());
         reservation.setBookingRef(UUID.randomUUID().toString());
 
-        reservationRepository.save(reservation);
+        reservation = reservationRepository.save(reservation);
+
+        addCommentForCreatedReservationWithoutOffer(reservation.getReservationId(), withOffer);
+
+        return reservationServiceHelper.mapEntityToReservationDTO(reservation);
+    }
+
+    private void addCommentForCreatedReservationWithoutOffer(Long reservationID, boolean withOffer) {
+        if(!withOffer) {
+            CommentDTO commentDTO = new CommentDTO();
+            commentDTO.setMessage("Created Reservation without base offer!");
+            commentDTO.setCommentType(CommentType.DIRECT.name());
+            commentDTO.setContextId(reservationID);
+            commentDTO.setContextType(ContextType.RESERVATION.name());
+            commentService.addComment(commentDTO);
+        }
     }
 
     public Reservation findById(Long reservationId) {

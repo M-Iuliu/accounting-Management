@@ -2,7 +2,9 @@ package com.accounting.controller;
 
 import com.accounting.dto.pagination.PageDTO;
 import com.accounting.dto.reservation.ReservationDTO;
+import com.accounting.dto.reservation.ReservationForm;
 import com.accounting.dto.reservation.ReservationPatchDTO;
+import com.accounting.exeption.ClientNotFoundException;
 import com.accounting.exeption.ErrorResponse;
 import com.accounting.service.reservations.ReservationService;
 import jakarta.persistence.EntityNotFoundException;
@@ -57,7 +59,19 @@ public class ReservationController {
         }
     }
 
-    //TODO: Add endpoint for CreateReservation without a base_offer -> select client, no offerId
+    @PostMapping()
+    public ResponseEntity<?> createReservation(@RequestBody ReservationForm createForm) {
+        try {
+            ReservationDTO newReservation = reservationService.createReservation(createForm, null);
+            return ResponseEntity.ok(newReservation);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value()));
+        } catch (ClientNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @PatchMapping("/{id}")
     public ResponseEntity<?> patchReservation(@PathVariable Long id, @RequestBody ReservationPatchDTO patch) {

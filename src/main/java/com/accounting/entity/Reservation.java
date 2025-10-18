@@ -37,7 +37,7 @@ public class Reservation {
     private List<ReservationParticipant> participants = new ArrayList<>(); //editable
 
     private String bookingRef;
-    private Date bookedDate;
+    private LocalDate bookedDate;
 
     private LocalDate departureDate;//editable
     private LocalDate returnDate;//editable

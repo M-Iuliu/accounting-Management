@@ -26,7 +26,7 @@ public class ReservationDTO {
     private List<Long> childrenAge;
 
     private String bookingRef;
-    private Date bookedDate;
+    private LocalDate bookedDate;
 
     private LocalDate departureDate;
     private LocalDate returnDate;

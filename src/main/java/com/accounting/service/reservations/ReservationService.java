@@ -8,7 +8,7 @@ import com.accounting.entity.Offer;
 import com.accounting.exeption.ClientNotFoundException;
 
 public interface ReservationService {
-    void createReservation(ReservationForm reservationForm, Offer offer) throws ClientNotFoundException;
+    ReservationDTO createReservation(ReservationForm reservationForm, Offer offer) throws ClientNotFoundException;
 
     ReservationDTO getReservation(Long reservationId);
 
