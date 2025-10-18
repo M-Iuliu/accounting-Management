@@ -36,7 +36,8 @@ public class ReservationServiceHelper {
     public ReservationDTO mapEntityToReservationDTO(Reservation reservation) {
         ReservationDTO dto = new ReservationDTO();
         dto.setReservationId(reservation.getReservationId());
-        dto.setOfferId(reservation.getOffer().getOfferId());
+        if(reservation.getOffer() != null)
+            dto.setOfferId(reservation.getOffer().getOfferId());
         dto.setParticipants(
                 reservation.getParticipants()
                         .stream()

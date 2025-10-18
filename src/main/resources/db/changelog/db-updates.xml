@@ -118,6 +118,14 @@
         <modifyDataType tableName="reservation" columnName="booked_date" newDataType="DATE"/>
     </changeSet>
 
+
+    <changeSet author="andreea" id="reservation-offer-nullable-28">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="reservation" columnName="offer_id"/>
+        </preConditions>
+        <dropNotNullConstraint tableName="reservation" columnName="offer_id"/>
+    </changeSet>
+
     <!--    <changeSet id="add-notification-update-date" author="emi">-->
     <!--        <addColumn tableName="notification">-->
     <!--            <column name="update_date" type="TIMESTAMP WITHOUT TIME ZONE"/>-->

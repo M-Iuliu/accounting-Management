@@ -26,7 +26,7 @@ public class Reservation {
     private Client client;
 
     @OneToOne
-    @JoinColumn(name = "offer_id", nullable = false)
+    @JoinColumn(name = "offer_id")
     private Offer offer;
 
     //    mappedBy = "reservation" must match the field name in ReservationParticipants.
