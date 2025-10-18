@@ -92,33 +92,33 @@ public class OfferServiceImp implements OfferService{
         return editedOfferDTO;
     }
 
-    //TODO: check if on upgrade to resv, if to actualize the offer detail (persNo...)
+    //TODO: check if on upgrade to reservation requires to update the offer detail (persNo,... etc)
     public void updateOfferStatus(Long id, OfferUpdateStatusDTO updateDto) throws ClientNotFoundException {
         Offer offer = findOfferById(id);
 
-        if (updateDto.getStatus().equalsIgnoreCase(OfferStatusEnum.CASTIGAT.name())
-                && offer.getStatus().name().equalsIgnoreCase(OfferStatusEnum.OFERTAT.name())) {
+        String newStatus = updateDto.getStatus().toUpperCase();
+        String oldStatus = offer.getStatus().name().toUpperCase();
+
+        boolean clientIsWon = newStatus.equals(OfferStatusEnum.CASTIGAT.name()) && oldStatus.equals(OfferStatusEnum.OFERTAT.name());
+        boolean clientIsLost = newStatus.equals(OfferStatusEnum.PIERDUT.name()) && oldStatus.equals(OfferStatusEnum.OFERTAT.name());
+        boolean clientIsBack = newStatus.equals(OfferStatusEnum.REVENIT.name()) && oldStatus.equals(OfferStatusEnum.PIERDUT.name());
+
+        if (clientIsWon) {
             reservationService.createReservation(updateDto.getReservationDetails(), offer);
             offer.setAdvance(updateDto.getReservationDetails().getAdvance());
             offer.setStatus(OfferStatusEnum.CASTIGAT);
-            offerRepository.save(offer);
 
-        } else if (updateDto.getStatus().equalsIgnoreCase(OfferStatusEnum.PIERDUT.name())
-                && offer.getStatus().name().equalsIgnoreCase(OfferStatusEnum.OFERTAT.name())) {
+        } else if (clientIsLost) {
             offer.setStatus(OfferStatusEnum.PIERDUT);
-            offerRepository.save(offer);
 
-        } else if (updateDto.getStatus().equalsIgnoreCase(OfferStatusEnum.REVENIT.name())
-                && offer.getStatus().name().equalsIgnoreCase(OfferStatusEnum.PIERDUT.name())) {
+        } else if (clientIsBack) {
             offer.setStatus(OfferStatusEnum.REVENIT);
-            offerRepository.save(offer);
 
         } else {
             throw new OfferStatusConflictException(
-                    String.format("Offer with status: [%s] can't be updated to new status: [%s]",
-                            offer.getStatus().name(), updateDto.getStatus()));
+                    String.format("Offer with status: [%s] can't be updated to new status: [%s]", oldStatus, newStatus));
         }
-
+        offerRepository.save(offer);
     }
 
     public void deleteOfferById(Long id) {

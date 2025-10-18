@@ -116,6 +116,4 @@ public class OfferController {
         }
     }
 
-    //TODO: Add update offer status -> CANCELLED / Upgraded to Reservation
-
 }

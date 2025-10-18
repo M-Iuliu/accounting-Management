@@ -26,9 +26,15 @@ public class ClientServiceImp implements ClientService{
     }
 
     public Client findById(Long id) throws ClientNotFoundException {
-        return clientRepository.findById(id)
+        Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new ClientNotFoundException("Client not found with ID: " + id));
-        //TODO: Throw error if client is inactive
+
+        //TODO: refactor repo getByIdIfNotDeleted?
+        if(client.getDeletionDate() != null) {
+            throw new ClientNotFoundException("Client with ID " + id + " is inactive");
+        }
+
+        return client;
     }
 
     public PageDTO getClients(String input, int page, int size) {
