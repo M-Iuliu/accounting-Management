@@ -1,26 +1,24 @@
 package com.accounting.service.clients;
 
-import com.accounting.dto.client.ClientForm;
+import com.accounting.dto.client.ClientAddEditForm;
 import com.accounting.dto.client.ClientDTO;
+import com.accounting.dto.client.ClientShortDTO;
 import com.accounting.dto.pagination.PageDTO;
 import com.accounting.entity.Client;
 import com.accounting.exeption.ClientNotFoundException;
 
-import java.util.Map;
-
 public interface ClientService {
-    Client saveClient(ClientForm clientAddForm);
+    Client saveClient(ClientAddEditForm clientAddForm);
 
-    ClientDTO getClientByFilters(String input) throws ClientNotFoundException;
+    PageDTO getClients(String input, int page, int size);
 
-    PageDTO getClients(int page, int size);
+    Client findById(Long id) throws ClientNotFoundException;
 
-    public Client findById(Long id);
+    ClientDTO editClient(Long id, ClientAddEditForm updateDto) throws ClientNotFoundException;
 
-    ClientDTO patchClient(Long id, Map<String, Object> updates) throws ClientNotFoundException;
+    void deleteClientById(Long id) throws ClientNotFoundException;
 
-    ClientDTO editClient(Long id, ClientForm client) throws ClientNotFoundException;
+    ClientDTO mapToDto(Client client);
 
-    void deleteClientById(Long id);
-
+    ClientShortDTO mapToShortDto(Client client);
 }

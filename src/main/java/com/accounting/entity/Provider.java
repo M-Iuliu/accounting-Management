@@ -1,22 +1,34 @@
 package com.accounting.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
+import java.util.List;
+
 @Entity
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class Provider {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long providerId;
+
     private String telephone;
     private String providerName;
+    private String email;
+    private String webLink;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "provider", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<Reservation> reservationList;
+
+    private Boolean isDeleted;
+    private Date deletionDate; //TODO: to add Auditable to all classes
+
 }

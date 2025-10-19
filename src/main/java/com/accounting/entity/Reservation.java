@@ -1,17 +1,20 @@
 package com.accounting.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class Reservation {
 
     @Id
@@ -23,20 +26,41 @@ public class Reservation {
     private Client client;
 
     @OneToOne
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "offer_id")
     private Offer offer;
 
-    private String participants;
-    private String childrenAge;
-    private Date departureDate;
-    private Date returnDate;
-    private int rooms;
-    private String destination;
-    private String hotel;
-    private String transport;
-    private double totalPrice;
-    private double remainingCost;
-    private Date paymentDeadlineDate;
-    private Long providerId;
+    //    mappedBy = "reservation" must match the field name in ReservationParticipants.
+//    CascadeType.ALL ensures participants are saved/deleted along with the reservation.
+//    orphanRemoval = true removes participants if they're removed from the list.
+    @JsonIgnore
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReservationParticipant> participants = new ArrayList<>(); //editable
 
+    private String bookingRef;
+    private LocalDate bookedDate;
+
+    private LocalDate departureDate;//editable
+    private LocalDate returnDate;//editable
+
+    private String destination;//editable
+    private String hotel;//editable
+    private int roomNo;//editable
+    private String transport; //editable TODO: enum ?//editable
+
+    private double price;//editable
+    private double receipted;//editable
+    private double balance;//editable
+    private LocalDate paymentDueDate;//editable
+    private String currency;//editable
+
+    @ManyToOne
+    @JoinColumn(name = "provider_id", nullable = false)
+    private Provider provider;//editable
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReservationFile> uploadedFiles;
+
+    private Boolean isDeleted;
+    private Date deletionDate; //TODO: to add Auditable to all classes
 }

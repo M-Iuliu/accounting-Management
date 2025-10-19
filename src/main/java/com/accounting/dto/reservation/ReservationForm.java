@@ -1,36 +1,32 @@
 package com.accounting.dto.reservation;
 
-import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class ReservationForm {
 
-    @NotNull
     private Long clientId;
-
-    @NotNull
-    private Long offerId;
-
-    private String participants;
-    private String childrenAge;
-    private Date departureDate;
-    private Date returnDate;
+    private LocalDate bookedDate;
+    private List<ReservationParticipantDTO> participants;
+    private LocalDate departureDate;
+    private LocalDate returnDate;
     private int personsNumber;
-    private int rooms;
+    private int roomNo;
     private String destination;
     private String hotel;
     private String transport;
     private double totalPrice;
     private double advance;
     private double remainingCost;
-    private Date paymentDeadlineDate;
+    private String currency;
+    private LocalDate paymentDeadlineDate;
     private Long providerId;
-
 }

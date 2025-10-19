@@ -1,23 +1,21 @@
 package com.accounting.service.reservations;
 
-import com.accounting.dto.client.ClientDTO;
 import com.accounting.dto.pagination.PageDTO;
 import com.accounting.dto.reservation.ReservationDTO;
 import com.accounting.dto.reservation.ReservationForm;
-
-import java.util.List;
-import java.util.Map;
+import com.accounting.dto.reservation.ReservationPatchDTO;
+import com.accounting.entity.Offer;
+import com.accounting.exeption.ClientNotFoundException;
 
 public interface ReservationService {
-    ReservationDTO createReservation(ReservationForm reservationForm);
+    ReservationDTO createReservation(ReservationForm reservationForm, Offer offer) throws ClientNotFoundException;
 
-    public List<ReservationDTO> getReservationsByFilters(String input);
+    ReservationDTO getReservation(Long reservationId);
 
-    PageDTO getReservations(int page, int size);
+    PageDTO getReservations(Integer clientId, int page, int size);
 
-    ReservationDTO editReservation(Long id, ReservationForm reservation);
+    ReservationDTO patchReservation(Long id, ReservationPatchDTO patch);
 
     void deleteReservationById(Long id);
 
-    ReservationDTO patchReservation(Long id, Map<String, Object> updates);
 }

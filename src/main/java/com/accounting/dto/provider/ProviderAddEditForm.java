@@ -7,8 +7,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ProviderAddForm {
-    private Long providerId;
+public class ProviderAddEditForm {
     private String telephone;
     private String providerName;
+    private String email;
+    private String webLink;
 }

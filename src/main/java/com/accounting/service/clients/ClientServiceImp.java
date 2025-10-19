@@ -1,57 +1,54 @@
 package com.accounting.service.clients;
 
-import com.accounting.dto.client.ClientForm;
+import com.accounting.dto.client.ClientAddEditForm;
 import com.accounting.dto.client.ClientDTO;
+import com.accounting.dto.client.ClientShortDTO;
 import com.accounting.dto.pagination.PageDTO;
 import com.accounting.dto.pagination.PaginationDTO;
 import com.accounting.entity.Client;
 import com.accounting.exeption.ClientNotFoundException;
 import com.accounting.repository.ClientRepository;
-import com.accounting.repository.OfferRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class ClientServiceImp implements ClientService{
 
-    private final ClientServiceHelper clientServiceHelper;
     private final ClientRepository clientRepository;
-    private final OfferRepository offerRepository;
 
-    public ClientServiceImp(ClientServiceHelper clientServiceHelper, ClientRepository clientRepository, OfferRepository offerRepository) {
-        this.clientServiceHelper = clientServiceHelper;
+    public ClientServiceImp(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
-        this.offerRepository = offerRepository;
     }
 
-    public ClientDTO getClientByFilters(String input) throws ClientNotFoundException {
-        Client myClient = clientRepository.findByFilter(input)
-                .orElseThrow(() -> new ClientNotFoundException("Client not found with given input: " + input));
+    public Client findById(Long id) throws ClientNotFoundException {
+        Client client = clientRepository.findById(id)
+                .orElseThrow(() -> new ClientNotFoundException("Client not found with ID: " + id));
 
-        return clientServiceHelper.mapClientToDTO(myClient);
+        //TODO: refactor repo getByIdIfNotDeleted?
+        if(client.getDeletionDate() != null) {
+            throw new ClientNotFoundException("Client with ID " + id + " is inactive");
+        }
+
+        return client;
     }
 
-    public Client findById(Long id) {
-        return clientRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Client not found with ID: " + id));
-    }
-
-    public PageDTO getClients(int page, int size) {
+    public PageDTO getClients(String input, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Client> clientPage = clientRepository.findAll(pageable);
+        Page<Client> clientPage;
+        if (input == null || input.isBlank()) {
+            clientPage = clientRepository.findAllActiveClients(pageable);
+        } else {
+            clientPage = clientRepository.findByFilter(input.trim(), pageable);
+        }
 
         List<ClientDTO> clientsList = clientPage.getContent()
                 .stream()
-                .map(clientServiceHelper::mapClientToDTO)
+                .map(ClientServiceHelper::mapClientToDTO)
                 .toList();
 
         PaginationDTO pagination = new PaginationDTO(
@@ -64,9 +61,9 @@ public class ClientServiceImp implements ClientService{
         return new PageDTO<>(clientsList, pagination);
     }
 
-    public Client saveClient(ClientForm clientAddForm) {
+    public Client saveClient(ClientAddEditForm clientAddForm) {
         // Map form to entity
-        Client client = clientServiceHelper.mapClientForm(clientAddForm);
+        Client client = ClientServiceHelper.mapClientForm(clientAddForm);
 
         // Save to the database
         client = clientRepository.save(client);
@@ -75,54 +72,30 @@ public class ClientServiceImp implements ClientService{
         return client;
     }
 
-    public ClientDTO editClient(Long id, ClientForm clientForm) throws ClientNotFoundException {
+    public ClientDTO editClient(Long id, ClientAddEditForm clientAddEditForm) throws ClientNotFoundException {
         // get client from DB
-        Client client = clientRepository.findById(id)
-                .orElseThrow(() -> new ClientNotFoundException("Client not found with id: " + id));
+        Client client = findById(id);
 
         //map client to DTO entity
-        client = clientServiceHelper.mapClientForm(clientForm);
-
-        // Save to the database
-        client = clientRepository.save(client);
+        ClientServiceHelper.patchClient(clientAddEditForm, client);
 
         // Return
-        return clientServiceHelper.mapClientToDTO(client);
+        return ClientServiceHelper.mapClientToDTO(clientRepository.save(client));
     }
 
-    public ClientDTO patchClient(Long id, Map<String, Object> updates)  throws ClientNotFoundException {
-        Client client = clientRepository.findById(id)
-                .orElseThrow(() -> new ClientNotFoundException("Client not found with id: " + id));
-
-        Set<String> inputKeys = updates.keySet();
-        Set<String> clientKeys = Arrays.stream(Client.class.getDeclaredFields())
-                .map(Field::getName)
-                .collect(Collectors.toSet());
-
-        for (String key : inputKeys) {
-            if (clientKeys.contains(key)) {
-                try {
-                    // Find the setter method (e.g., setName for "name")
-                    Method setter = Client.class.getMethod("set" + Character.toUpperCase(key.charAt(0)) + key.substring(1), String.class);
-
-                    // Invoke the setter on the existing client object
-                    setter.invoke(client, updates.get(key));
-                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                    throw new RuntimeException("Failed to set field: " + key, e);
-                }
-            }
-        }
-
+    public void deleteClientById(Long id) throws ClientNotFoundException {
+        Client client = findById(id);
+        client.setIsDeleted(Boolean.TRUE);
+        client.setDeletionDate(new Date());
         clientRepository.save(client);
-
-        return clientServiceHelper.mapClientToDTO(client);
     }
 
-    public void deleteClientById(Long id) {
-        if (!clientRepository.existsById(id)) {
-            throw new EntityNotFoundException("Client with id " + id + " not found");
-        }
-        clientRepository.deleteById(id);
+    public ClientDTO mapToDto(Client client){
+        return ClientServiceHelper.mapClientToDTO(client);
+    }
+
+    public ClientShortDTO mapToShortDto(Client client){
+        return ClientServiceHelper.mapClientToShortDTO(client);
     }
 
 }

@@ -2,16 +2,19 @@ package com.accounting.entity;
 
 import com.accounting.constants.OfferStatusEnum;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = "client")
 public class Offer {
 
     @Id
@@ -22,12 +25,13 @@ public class Offer {
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
 
-    private Date offerDate;
-    private int adultsNb;
-    private int childrenNb;
-    private int personsNumber;
+    private LocalDate offerDate;
+    private int adultsNo;
+    private int childrenNo;
+    //    private int personsNumber;
     private String destination;
     private String period;
+    private String currency;
     private double budget;
     private double grossPrice;
     private double advance;
@@ -36,6 +40,9 @@ public class Offer {
 
     @Enumerated(EnumType.STRING)
     private OfferStatusEnum status;
+
+    private Boolean isDeleted;
+    private Date deletionDate; //TODO: to add Auditable to all classes
 
     private String obs;
 

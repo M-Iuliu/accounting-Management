@@ -1,17 +1,157 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro
-            http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd
-            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="update-provider-add-phone-number" author="emi">
-        <addColumn tableName="provider">
-            <column name="telephone" type="VARCHAR(20)"/>
+    <changeSet author="andreea" id="notification-alter-date-11">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="notification" columnName="create_date"/>
+        </preConditions>
+        <sql>
+            ALTER TABLE notification
+            ALTER COLUMN create_date TYPE DATE USING create_date::date;
+        </sql>
+        <sql>
+            ALTER TABLE notification
+            ALTER COLUMN update_date TYPE DATE USING update_date::date;
+        </sql>
+
+        <!--        <modifyDataType tableName="notification" columnName="create_date" newDataType="DATE"/>-->
+        <!--        <modifyDataType tableName="notification" columnName="update_date" newDataType="DATE"/>-->
+    </changeSet>
+
+    <changeSet author="andreea" id="offer-alter-date-12">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="offer" columnName="offer_date"/>
+        </preConditions>
+        <sql>
+            ALTER TABLE offer
+            ALTER COLUMN offer_date TYPE DATE USING offer_date::date;
+        </sql>
+    </changeSet>
+
+    <changeSet author="andreea" id="reservation-alter-date-12">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="reservation" columnName="offer_date"/>
+        </preConditions>
+        <sql>
+            ALTER TABLE reservation
+            ALTER COLUMN departure_date TYPE DATE USING departure_date::date;
+        </sql>
+        <sql>
+            ALTER TABLE reservation
+            ALTER COLUMN return_date TYPE DATE USING return_date::date;
+        </sql>
+        <sql>
+            ALTER TABLE reservation
+            ALTER COLUMN payment_due_date TYPE DATE USING payment_due_date::date;
+        </sql>
+        <!--        <modifyDataType tableName="reservation" columnName="departure_date" newDataType="DATE"/>-->
+        <!--        <modifyDataType tableName="reservation" columnName="return_date" newDataType="DATE"/>-->
+        <!--        <modifyDataType tableName="reservation" columnName="payment_due_date" newDataType="DATE"/>-->
+
+    </changeSet>
+
+
+    <changeSet author="andreea" id="notification-alter-date-16">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="notification" columnName="create_date"/>
+        </preConditions>
+        <modifyDataType tableName="notification" columnName="create_date" newDataType="DATE"/>
+        <modifyDataType tableName="notification" columnName="update_date" newDataType="DATE"/>
+    </changeSet>
+
+    <changeSet author="andreea" id="offer-alter-date-17">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="offer" columnName="offer_date"/>
+        </preConditions>
+
+        <modifyDataType tableName="offer" columnName="offer_date" newDataType="DATE"/>
+    </changeSet>
+
+    <changeSet author="andreea" id="reservation-alter-date-18">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="reservation" columnName="offer_date"/>
+        </preConditions>
+
+        <modifyDataType tableName="reservation" columnName="departure_date" newDataType="DATE"/>
+        <modifyDataType tableName="reservation" columnName="return_date" newDataType="DATE"/>
+        <modifyDataType tableName="reservation" columnName="payment_due_date" newDataType="DATE"/>
+
+    </changeSet>
+
+    <changeSet author="andreea" id="reservation-alter-date-24">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="reservation" columnName="departure_date"/>
+        </preConditions>
+
+        <modifyDataType tableName="reservation" columnName="departure_date" newDataType="DATE"/>
+
+    </changeSet>
+
+
+    <changeSet author="andreea" id="reservation-alter-date-25">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="reservation" columnName="return_date"/>
+        </preConditions>
+
+        <modifyDataType tableName="reservation" columnName="return_date" newDataType="DATE"/>
+
+    </changeSet>
+
+
+    <changeSet author="andreea" id="reservation-alter-date-26">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="reservation" columnName="payment_due_date"/>
+        </preConditions>
+
+        <modifyDataType tableName="reservation" columnName="payment_due_date" newDataType="DATE"/>
+
+    </changeSet>
+
+
+    <changeSet author="andreea" id="reservation-booked-alter-date-27">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="reservation" columnName="booked_date"/>
+        </preConditions>
+        <modifyDataType tableName="reservation" columnName="booked_date" newDataType="DATE"/>
+    </changeSet>
+
+
+    <changeSet author="andreea" id="reservation-offer-nullable-28">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="reservation" columnName="offer_id"/>
+        </preConditions>
+        <dropNotNullConstraint tableName="reservation" columnName="offer_id"/>
+    </changeSet>
+
+
+    <changeSet author="andreea" id="offer-add-currency-29">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="offer" columnName="currency"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="offer">
+            <column name="currency" type="VARCHAR(255)"/>
         </addColumn>
     </changeSet>
 
+    <!--    <changeSet id="add-notification-update-date" author="emi">-->
+    <!--        <addColumn tableName="notification">-->
+    <!--            <column name="update_date" type="TIMESTAMP WITHOUT TIME ZONE"/>-->
+    <!--        </addColumn>-->
+    <!--    </changeSet>-->
+
+    <!--    <changeSet id="20250812-1" author="andreea">-->
+    <!--        <preConditions onFail="MARK_RAN">-->
+    <!--            <columnExists tableName="reservation" columnName="roomNo"/>-->
+    <!--        </preConditions>-->
+
+    <!--        <dropNotNullConstraint-->
+    <!--                tableName="reservation"-->
+    <!--                columnName="roomNo"-->
+    <!--                columnDataType="INTEGER"/>-->
+    <!--    </changeSet>-->
 </databaseChangeLog>

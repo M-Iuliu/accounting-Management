@@ -1,25 +1,26 @@
 package com.accounting.dto.offer;
 
 import com.accounting.constants.OfferStatusEnum;
-import com.accounting.entity.Client;
+import com.accounting.dto.client.ClientShortDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OfferDTO {
     private Long offerId;
-    private Client client;
-    private int adultsNb;
-    private int childrenNb;
+    private ClientShortDTO client;
+    private int adultsNo;
+    private int childrenNo;
     private String destination;
     private String period;
+    private String currency;
     private double budget;
     private double grossPrice;
     private double advance;

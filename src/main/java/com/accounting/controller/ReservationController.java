@@ -1,17 +1,13 @@
 package com.accounting.controller;
 
-import com.accounting.dto.client.ClientDTO;
-import com.accounting.dto.client.ClientForm;
 import com.accounting.dto.pagination.PageDTO;
-import com.accounting.dto.provider.ProviderDTO;
 import com.accounting.dto.reservation.ReservationDTO;
 import com.accounting.dto.reservation.ReservationForm;
+import com.accounting.dto.reservation.ReservationPatchDTO;
 import com.accounting.exeption.ClientNotFoundException;
 import com.accounting.exeption.ErrorResponse;
-import com.accounting.service.offers.OfferService;
 import com.accounting.service.reservations.ReservationService;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,46 +15,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
-
 @Validated
 @RestController
-@RequestMapping("/offer")
+@RequestMapping("/reservation")
 @AllArgsConstructor
 public class ReservationController {
 
     @Autowired
     private final ReservationService reservationService;
 
-    @PostMapping("/saveReservation")
-    public ResponseEntity<ReservationDTO> saveReservation(@RequestBody @Valid ReservationForm reservationForm) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(reservationService.createReservation(reservationForm));
-    }
-
-    @GetMapping("/getReservationByFilters")
-    public ResponseEntity<?> getProviderByFilters(@RequestParam String input){
-        try {
-            // Call the service method to get the ReservationDTO by filters
-            List<ReservationDTO> myReservations = reservationService.getReservationsByFilters(input);
-
-            // Return a successful response with the ReservationDTO if found
-            return ResponseEntity.ok(myReservations);
-
-        } catch (EntityNotFoundException e) {
-            // Handle both exceptions similarly and return a 404 response
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new ErrorResponse("No Reservation found!", HttpStatus.NOT_FOUND.value()));
-        }
-    }
-
-    @GetMapping("/getReservations")
-    public ResponseEntity<?> getOffers(
+    @GetMapping()
+    public ResponseEntity<?> getReservationsWithPagination(
+            @RequestParam(required = false) Integer clientId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
         try{
-            PageDTO reservationsWithPagination = reservationService.getReservations(page, size);
+            PageDTO reservationsWithPagination = reservationService.getReservations(clientId, page, size);
             return ResponseEntity.ok(reservationsWithPagination);
         } catch (EntityNotFoundException e) {
             return ResponseEntity
@@ -71,24 +43,40 @@ public class ReservationController {
         }
     }
 
-    @PutMapping("/updateReservation/{id}")
-    public ResponseEntity<?> updateReservation(@PathVariable Long id, @RequestBody ReservationForm reservation){
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getReservation(@PathVariable Long id) {
         try{
-            ReservationDTO reservationDTO = reservationService.editReservation(id, reservation);
-
-            return ResponseEntity.ok(reservationDTO);
+            ReservationDTO reservationDto = reservationService.getReservation(id);
+            return ResponseEntity.ok(reservationDto);
         } catch (EntityNotFoundException e) {
-            // If the client is not found, return a 404 status with an error message
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("Reservation not found", HttpStatus.NOT_FOUND.value()));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR.value()));
         }
     }
 
-    @PatchMapping("/patchReservation/{id}")
-    public ResponseEntity<?> patchUpdateReservation(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
+    @PostMapping()
+    public ResponseEntity<?> createReservation(@RequestBody ReservationForm createForm) {
         try {
-            ReservationDTO updatedReservation = reservationService.patchReservation(id, updates);
+            ReservationDTO newReservation = reservationService.createReservation(createForm, null);
+            return ResponseEntity.ok(newReservation);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value()));
+        } catch (ClientNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> patchReservation(@PathVariable Long id, @RequestBody ReservationPatchDTO patch) {
+        try {
+            ReservationDTO updatedReservation = reservationService.patchReservation(id, patch);
             return ResponseEntity.ok(updatedReservation);
         } catch (EntityNotFoundException e) {
             return ResponseEntity
@@ -101,7 +89,7 @@ public class ReservationController {
         }
     }
 
-    @DeleteMapping("/deleteReservation/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteReservation(@PathVariable Long id) {
         try {
             // Attempt to delete the client by calling the service layer

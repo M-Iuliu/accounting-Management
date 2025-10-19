@@ -1,19 +1,35 @@
 package com.accounting.repository;
 
 import com.accounting.entity.Reservation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
     @Query("SELECT r FROM Reservation r " +
-            "JOIN r.client c " +
-            "WHERE (LOWER(c.name) LIKE LOWER(CONCAT('%', :input, '%')) " +
-            "OR LOWER(c.surname) LIKE LOWER(CONCAT('%', :input, '%')) " +
-            "OR c.telephone LIKE CONCAT('%', :input, '%'))")
-    List<Reservation> findByFilter(@Param("input") String input);
+            "WHERE r.isDeleted is null " +
+            "AND r.client.clientId = :clientId")
+    Page<Reservation> findByReservationsByClient(@Param("clientId") Integer clientId, Pageable pageable);
+
+    @Query("SELECT r FROM Reservation r WHERE r.isDeleted is null")
+    Page<Reservation> findAllActiveReservations(Pageable pageable);
+
+    @Query("SELECT r FROM Reservation r WHERE r.isDeleted is null")
+    List<Reservation> findAllActiveReservations();
+
+    @Query("SELECT r FROM Reservation r WHERE r.returnDate = :targetDate AND r.isDeleted is null")
+    List<Reservation> findReservationsWithReturnDate(@Param("targetDate") LocalDate targetDate);
+
+    @Query("SELECT r FROM Reservation r WHERE r.departureDate = :targetDate AND r.isDeleted is null")
+    List<Reservation> findReservationsWithDepartureDate(@Param("targetDate") LocalDate targetDate);
+
+    @Query("SELECT r FROM Reservation r WHERE r.paymentDueDate = :targetDate AND r.isDeleted is null")
+    List<Reservation> findReservationsWithPaymentDueDate(@Param("targetDate") LocalDate targetDate);
 
 }

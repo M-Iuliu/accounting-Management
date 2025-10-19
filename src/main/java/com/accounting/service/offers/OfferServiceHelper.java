@@ -1,29 +1,39 @@
 package com.accounting.service.offers;
 
-import com.accounting.constants.OfferStatusEnum;
-import com.accounting.dto.offer.OfferForm;
 import com.accounting.dto.offer.OfferDTO;
-import com.accounting.entity.Client;
+import com.accounting.dto.offer.OfferForm;
+import com.accounting.dto.offer.OfferPatchDTO;
+import com.accounting.dto.offer.OfferShortDTO;
 import com.accounting.entity.Offer;
-import com.accounting.repository.ClientRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 
 @Service
 public class OfferServiceHelper {
 
-    @Autowired
-    private ClientRepository clientRepository;
+    public OfferShortDTO mapOfferToOfferShortDTO(Offer input) {
+        OfferShortDTO output = new OfferShortDTO();
+
+        output.setOfferId(input.getOfferId());
+        output.setDestination(input.getDestination());
+        output.setPeriod(input.getPeriod());
+        output.setBudget(input.getBudget());
+        output.setStatus(input.getStatus());
+        //TODO: same notification/obs system as in reservation?
+        output.setObs(input.getObs());
+        return output;
+    }
 
     public OfferDTO mapOfferToOfferDTO(Offer input) {
         OfferDTO output = new OfferDTO();
 
         output.setOfferId(input.getOfferId());
-        output.setClient(input.getClient());
-        output.setAdultsNb(input.getAdultsNb());
-        output.setChildrenNb(input.getChildrenNb());
+        output.setAdultsNo(input.getAdultsNo());
+        output.setChildrenNo(input.getChildrenNo());
         output.setDestination(input.getDestination());
         output.setPeriod(input.getPeriod());
+        output.setCurrency(input.getCurrency());
         output.setBudget(input.getBudget());
         output.setGrossPrice(input.getGrossPrice());
         output.setAdvance(input.getAdvance());
@@ -35,14 +45,26 @@ public class OfferServiceHelper {
         return output;
     }
 
+    public static void patchOffer(OfferPatchDTO patch, Offer offer) {
+
+        if (patch.getAdultsNo() != null) offer.setAdultsNo(patch.getAdultsNo());
+        if (patch.getChildrenNo() != null) offer.setChildrenNo(patch.getChildrenNo());
+        if (patch.getDestination() != null) offer.setDestination(patch.getDestination());
+        if (patch.getPeriod() != null) offer.setPeriod(patch.getPeriod());
+        if (patch.getCurrency() != null) offer.setCurrency(patch.getCurrency());
+        if (patch.getBudget() != null) offer.setBudget(patch.getBudget());
+        if (patch.getGrossPrice() != null) offer.setGrossPrice(patch.getGrossPrice());
+        if (patch.getAdvance() != null) offer.setAdvance(patch.getAdvance());
+        if (patch.getCommission() != null) offer.setCommission(patch.getCommission());
+        if (patch.getAcquisitionPrice() != null) offer.setAcquisitionPrice(patch.getAcquisitionPrice());
+    }
+
+
     public Offer mapOfferFormToOffer(OfferForm input){
         Offer output = new Offer();
-
-        Client client = clientRepository.findById(input.getClientId()).orElse(null);
-        output.setClient(client);
-        output.setOfferDate(input.getOfferDate());
-        output.setAdultsNb(input.getAdultsNb());
-        output.setChildrenNb(input.getChildrenNb());
+        output.setOfferDate(input.getOfferDate() != null ? input.getOfferDate() : LocalDate.now());
+        output.setAdultsNo(input.getAdultsNo());
+        output.setChildrenNo(input.getChildrenNo());
         output.setDestination(input.getDestination());
         output.setPeriod(input.getPeriod());
         output.setBudget(input.getBudget());
@@ -50,7 +72,6 @@ public class OfferServiceHelper {
         output.setAdvance(input.getAdvance());
         output.setCommission(input.getCommission());
         output.setAcquisitionPrice(input.getAcquisitionPrice());
-        output.setStatus(OfferStatusEnum.valueOf(input.getStatus().toUpperCase()));
         output.setObs(input.getObs());
 
         return output;
