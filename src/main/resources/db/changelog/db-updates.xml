@@ -138,6 +138,44 @@
         </addColumn>
     </changeSet>
 
+    <!-- Client Audit Fields - Step 1: Add columns -->
+    <changeSet author="claude" id="client-add-audit-fields-30">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="client" columnName="created_by"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="client">
+            <column name="created_by" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_date" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="true"/>
+            </column>
+            <column name="modified_by" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="modified_date" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <!-- Client Audit Fields - Step 2: Set default values for existing records -->
+    <changeSet author="claude" id="client-add-audit-fields-31">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="client" columnName="created_by"/>
+        </preConditions>
+        <sql>
+            UPDATE client
+            SET created_by = 'SYSTEM',
+                created_date = CURRENT_TIMESTAMP,
+                modified_by = 'SYSTEM',
+                modified_date = CURRENT_TIMESTAMP
+            WHERE created_by IS NULL;
+        </sql>
+    </changeSet>
+
     <!--    <changeSet id="add-notification-update-date" author="emi">-->
     <!--        <addColumn tableName="notification">-->
     <!--            <column name="update_date" type="TIMESTAMP WITHOUT TIME ZONE"/>-->
