@@ -5,21 +5,20 @@ import com.accounting.entity.enums.NotificationCategory;
 import com.accounting.entity.enums.NotificationStatus;
 import com.accounting.entity.enums.NotificationType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
+import lombok.*;
 
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Notification {
+@ToString(exclude = "client")
+@EqualsAndHashCode(callSuper = false)
+public class Notification extends BaseAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "notification_id")
     private Long notificationId;
 
     @ManyToOne
@@ -27,26 +26,25 @@ public class Notification {
     private Client client;
 
     @Enumerated(EnumType.STRING)
-    private ContextType contextType; // for which OFFER / RESERVATION is this notification relevant
+    @Column(name = "context_type", length = 50)
+    private ContextType contextType;
 
+    @Column(name = "context_id")
     private Long contextId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", length = 50)
     private NotificationStatus notificationStatus;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "category")
+    @Column(name = "category", length = 50)
     private NotificationCategory notificationCategory;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "type")
+    @Column(name = "type", length = 50)
     private NotificationType notificationType;
 
+    @Column(columnDefinition = "TEXT")
     private String message;
-
-    private LocalDate createDate;
-
-    private LocalDate updateDate;
 
 }
