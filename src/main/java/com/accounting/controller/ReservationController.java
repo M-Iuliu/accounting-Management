@@ -8,12 +8,16 @@ import com.accounting.exeption.ClientNotFoundException;
 import com.accounting.exeption.ErrorResponse;
 import com.accounting.service.reservations.ReservationService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.stream.Collectors;
 
 @Validated
 @RestController
@@ -60,7 +64,7 @@ public class ReservationController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> createReservation(@RequestBody ReservationForm createForm) {
+    public ResponseEntity<?> createReservation(@Valid @RequestBody ReservationForm createForm) {
         try {
             ReservationDTO newReservation = reservationService.createReservation(createForm, null);
             return ResponseEntity.ok(newReservation);
@@ -74,7 +78,7 @@ public class ReservationController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> patchReservation(@PathVariable Long id, @RequestBody ReservationPatchDTO patch) {
+    public ResponseEntity<?> patchReservation(@PathVariable Long id, @Valid @RequestBody ReservationPatchDTO patch) {
         try {
             ReservationDTO updatedReservation = reservationService.patchReservation(id, patch);
             return ResponseEntity.ok(updatedReservation);
@@ -104,6 +108,17 @@ public class ReservationController {
                     .status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("Reservation not found", HttpStatus.NOT_FOUND.value()));
         }
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
+        String errorMessage = ex.getBindingResult().getFieldErrors().stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .collect(Collectors.joining(", "));
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(errorMessage, HttpStatus.BAD_REQUEST.value()));
     }
 
 }

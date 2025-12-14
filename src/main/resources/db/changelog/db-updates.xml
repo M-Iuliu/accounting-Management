@@ -220,6 +220,44 @@
     <!--        </addColumn>-->
     <!--    </changeSet>-->
 
+    <!-- Reservation Audit Fields - Step 1: Add columns -->
+    <changeSet author="claude" id="reservation-add-audit-fields-34">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="reservation" columnName="created_by"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="reservation">
+            <column name="created_by" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_date" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="true"/>
+            </column>
+            <column name="modified_by" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="modified_date" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <!-- Reservation Audit Fields - Step 2: Set default values for existing records -->
+    <changeSet author="claude" id="reservation-add-audit-fields-35">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="reservation" columnName="created_by"/>
+        </preConditions>
+        <sql>
+            UPDATE reservation
+            SET created_by = 'SYSTEM',
+                created_date = CURRENT_TIMESTAMP,
+                modified_by = 'SYSTEM',
+                modified_date = CURRENT_TIMESTAMP
+            WHERE created_by IS NULL;
+        </sql>
+    </changeSet>
+
     <!--    <changeSet id="20250812-1" author="andreea">-->
     <!--        <preConditions onFail="MARK_RAN">-->
     <!--            <columnExists tableName="reservation" columnName="roomNo"/>-->
