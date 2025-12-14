@@ -1,80 +1,64 @@
 package com.accounting.service.offers;
 
 import com.accounting.dto.offer.OfferDTO;
-import com.accounting.dto.offer.OfferForm;
-import com.accounting.dto.offer.OfferPatchDTO;
 import com.accounting.dto.offer.OfferShortDTO;
 import com.accounting.entity.Offer;
-import org.springframework.stereotype.Service;
+import com.accounting.mapper.OfferMapper;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-
-@Service
+/**
+ * Helper component for Offer service operations.
+ * Provides utility methods and delegates to OfferMapper for entity-DTO conversions.
+ */
+@Slf4j
+@Component
+@RequiredArgsConstructor
 public class OfferServiceHelper {
 
-    public OfferShortDTO mapOfferToOfferShortDTO(Offer input) {
-        OfferShortDTO output = new OfferShortDTO();
+    private final OfferMapper offerMapper;
 
-        output.setOfferId(input.getOfferId());
-        output.setDestination(input.getDestination());
-        output.setPeriod(input.getPeriod());
-        output.setBudget(input.getBudget());
-        output.setStatus(input.getStatus());
-        //TODO: same notification/obs system as in reservation?
-        output.setObs(input.getObs());
-        return output;
+    /**
+     * Maps Offer entity to OfferShortDTO
+     * @param offer the offer entity
+     * @return OfferShortDTO representation
+     */
+    public OfferShortDTO mapOfferToOfferShortDTO(Offer offer) {
+        log.debug("Mapping Offer entity to ShortDTO for offer ID: {}", offer.getOfferId());
+        return offerMapper.toShortDTO(offer);
     }
 
-    public OfferDTO mapOfferToOfferDTO(Offer input) {
-        OfferDTO output = new OfferDTO();
-
-        output.setOfferId(input.getOfferId());
-        output.setAdultsNo(input.getAdultsNo());
-        output.setChildrenNo(input.getChildrenNo());
-        output.setDestination(input.getDestination());
-        output.setPeriod(input.getPeriod());
-        output.setCurrency(input.getCurrency());
-        output.setBudget(input.getBudget());
-        output.setGrossPrice(input.getGrossPrice());
-        output.setAdvance(input.getAdvance());
-        output.setCommission(input.getCommission());
-        output.setAcquisitionPrice(input.getAcquisitionPrice());
-        output.setStatus(input.getStatus());
-        output.setObs(input.getObs());
-
-        return output;
+    /**
+     * Maps Offer entity to OfferDTO
+     * @param offer the offer entity
+     * @return OfferDTO representation
+     */
+    public OfferDTO mapOfferToOfferDTO(Offer offer) {
+        log.debug("Mapping Offer entity to DTO for offer ID: {}", offer.getOfferId());
+        return offerMapper.toDTO(offer);
     }
 
-    public static void patchOffer(OfferPatchDTO patch, Offer offer) {
+    /**
+     * Validates offer business rules before save/update
+     * @param offer the offer to validate
+     * @throws IllegalArgumentException if validation fails
+     */
+    public void validateOffer(Offer offer) {
+        log.debug("Validating offer: {}", offer.getOfferId());
 
-        if (patch.getAdultsNo() != null) offer.setAdultsNo(patch.getAdultsNo());
-        if (patch.getChildrenNo() != null) offer.setChildrenNo(patch.getChildrenNo());
-        if (patch.getDestination() != null) offer.setDestination(patch.getDestination());
-        if (patch.getPeriod() != null) offer.setPeriod(patch.getPeriod());
-        if (patch.getCurrency() != null) offer.setCurrency(patch.getCurrency());
-        if (patch.getBudget() != null) offer.setBudget(patch.getBudget());
-        if (patch.getGrossPrice() != null) offer.setGrossPrice(patch.getGrossPrice());
-        if (patch.getAdvance() != null) offer.setAdvance(patch.getAdvance());
-        if (patch.getCommission() != null) offer.setCommission(patch.getCommission());
-        if (patch.getAcquisitionPrice() != null) offer.setAcquisitionPrice(patch.getAcquisitionPrice());
+        if (offer.getAdultsNo() + offer.getChildrenNo() == 0) {
+            throw new IllegalArgumentException("Offer must have at least one adult or child");
+        }
+
+        if (offer.getGrossPrice() < offer.getAcquisitionPrice()) {
+            throw new IllegalArgumentException("Gross price cannot be less than acquisition price");
+        }
+
+        if (offer.getAdvance() > offer.getGrossPrice()) {
+            throw new IllegalArgumentException("Advance cannot exceed gross price");
+        }
+
+        log.debug("Offer validation successful");
     }
-
-
-    public Offer mapOfferFormToOffer(OfferForm input){
-        Offer output = new Offer();
-        output.setOfferDate(input.getOfferDate() != null ? input.getOfferDate() : LocalDate.now());
-        output.setAdultsNo(input.getAdultsNo());
-        output.setChildrenNo(input.getChildrenNo());
-        output.setDestination(input.getDestination());
-        output.setPeriod(input.getPeriod());
-        output.setBudget(input.getBudget());
-        output.setGrossPrice(input.getGrossPrice());
-        output.setAdvance(input.getAdvance());
-        output.setCommission(input.getCommission());
-        output.setAcquisitionPrice(input.getAcquisitionPrice());
-        output.setObs(input.getObs());
-
-        return output;
-    }
-
 }
