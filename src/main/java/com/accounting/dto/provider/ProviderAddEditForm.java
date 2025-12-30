@@ -9,7 +9,7 @@ import lombok.*;
 @ToString
 public class ProviderAddEditForm {
     private String telephone;
-    private String providerName;
+    private String name;
     private String email;
     private String webLink;
 }

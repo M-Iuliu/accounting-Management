@@ -61,7 +61,7 @@ public class ReservationServiceImp implements ReservationService {
     public ReservationDTO createReservation(ReservationForm reservationForm, Offer offer) throws ClientNotFoundException {
         boolean withOffer = offer != null;
         log.info("Creating new reservation for client ID: {}, with offer: {}",
-            reservationForm.getClientId(), withOffer);
+            offer.getClient().getClientId(), withOffer);
 
         Reservation reservation = reservationMapper.toEntity(reservationForm);
 
