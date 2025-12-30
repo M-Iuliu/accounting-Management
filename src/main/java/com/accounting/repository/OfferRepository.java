@@ -15,14 +15,14 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
 
     @Query("SELECT o FROM Offer o JOIN o.client c " +
             "WHERE o.isDeleted is null " +
+            "AND (:showActive = false OR o.status = 'OFERTAT') " +
             "AND (LOWER(c.name) LIKE LOWER(CONCAT('%', :input, '%')) " +
             "OR LOWER(c.surname) LIKE LOWER(CONCAT('%', :input, '%')) " +
             "OR c.telephone LIKE CONCAT('%', :input, '%'))")
-//            "OR FUNCTION('DATE', o.offerDate) = :offerDate" + //TODO: Ask Emi what he intended to do with offerDate
-    Page<Offer> findByFilter(@Param("input") String input, Pageable pageable);
+    Page<Offer> findByFilter(@Param("input") String input, Pageable pageable, @Param("showActive") boolean showActive);
 
-    @Query("SELECT o FROM Offer o WHERE o.isDeleted is null")
-    Page<Offer> findAllActiveOffers(Pageable pageable);
+    @Query("SELECT o FROM Offer o WHERE o.isDeleted is null AND (:showActive = false OR o.status = 'OFERTAT')")
+    Page<Offer> findAllActiveOffers(Pageable pageable, @Param("showActive") boolean showActive);
 
     @Query("SELECT o FROM Offer o " +
             "WHERE o.deletionDate is NULL " +

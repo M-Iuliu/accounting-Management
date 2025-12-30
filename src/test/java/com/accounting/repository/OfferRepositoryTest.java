@@ -139,7 +139,7 @@ class OfferRepositoryTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         // Act
-        Page<Offer> result = offerRepository.findAllActiveOffers(pageable);
+        Page<Offer> result = offerRepository.findAllActiveOffers(pageable, Boolean.TRUE);
 
         // Assert
         assertNotNull(result);
@@ -153,7 +153,7 @@ class OfferRepositoryTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         // Act - Search for "John" (matches client name)
-        Page<Offer> result = offerRepository.findByFilter("John", pageable);
+        Page<Offer> result = offerRepository.findByFilter("John", pageable, Boolean.TRUE);
 
         // Assert - Should return all active offers for this client, NOT deleted ones
         assertNotNull(result);
@@ -167,7 +167,7 @@ class OfferRepositoryTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         // Act
-        Page<Offer> result = offerRepository.findByFilter("Doe", pageable);
+        Page<Offer> result = offerRepository.findByFilter("Doe", pageable, Boolean.TRUE);
 
         // Assert
         assertNotNull(result);
@@ -181,7 +181,7 @@ class OfferRepositoryTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         // Act
-        Page<Offer> result = offerRepository.findByFilter("1234567890", pageable);
+        Page<Offer> result = offerRepository.findByFilter("1234567890", pageable, Boolean.TRUE);
 
         // Assert
         assertNotNull(result);
@@ -195,7 +195,7 @@ class OfferRepositoryTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         // Act
-        Page<Offer> result = offerRepository.findByFilter("NonExistent", pageable);
+        Page<Offer> result = offerRepository.findByFilter("NonExistent", pageable, Boolean.TRUE);
 
         // Assert
         assertNotNull(result);
@@ -208,7 +208,7 @@ class OfferRepositoryTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         // Act
-        Page<Offer> result = offerRepository.findByFilter("john", pageable);
+        Page<Offer> result = offerRepository.findByFilter("john", pageable, Boolean.TRUE);
 
         // Assert
         assertNotNull(result);
@@ -286,7 +286,7 @@ class OfferRepositoryTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         // Verify offer is returned before deletion
-        Page<Offer> beforeDelete = offerRepository.findAllActiveOffers(pageable);
+        Page<Offer> beforeDelete = offerRepository.findAllActiveOffers(pageable, Boolean.TRUE);
         assertEquals(3, beforeDelete.getTotalElements());
 
         // Act - Soft delete
@@ -297,7 +297,7 @@ class OfferRepositoryTest {
         entityManager.clear();
 
         // Assert - Offer should not appear in active offers
-        Page<Offer> afterDelete = offerRepository.findAllActiveOffers(pageable);
+        Page<Offer> afterDelete = offerRepository.findAllActiveOffers(pageable, Boolean.TRUE);
         assertEquals(2, afterDelete.getTotalElements());
         assertFalse(afterDelete.getContent().stream()
             .anyMatch(o -> o.getOfferId().equals(activeOffer1.getOfferId())));

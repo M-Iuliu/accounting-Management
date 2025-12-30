@@ -15,7 +15,6 @@ public class OfferForm {
     @NotNull(message = "Client ID is required")
     private Long clientId;
 
-    @NotNull(message = "Offer date is required")
     @PastOrPresent(message = "Offer date cannot be in the future")
     private LocalDate offerDate;
 

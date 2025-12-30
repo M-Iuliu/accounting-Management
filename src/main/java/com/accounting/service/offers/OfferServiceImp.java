@@ -112,22 +112,23 @@ public class OfferServiceImp implements OfferService {
      * @param input search filter (searches client name, surname, telephone)
      * @param page page number (0-indexed)
      * @param size page size
+     * @param showActive if true, only show offers with status CASTIGAT
      * @return paginated offer list with metadata
      */
     @Override
     @Transactional(readOnly = true)
-    public PageDTO getOffers(String input, int page, int size) {
-        log.info("Getting offers - page: {}, size: {}, filter: '{}'", page, size, input);
+    public PageDTO getOffers(String input, int page, int size, boolean showActive) {
+        log.info("Getting offers - page: {}, size: {}, filter: '{}', showActive: {}", page, size, input, showActive);
 
         Pageable pageable = PageRequest.of(page, size);
         Page<Offer> offerPage;
 
         if (input == null || input.isBlank()) {
             log.debug("Retrieving all active offers");
-            offerPage = offerRepository.findAllActiveOffers(pageable);
+            offerPage = offerRepository.findAllActiveOffers(pageable, showActive);
         } else {
             log.debug("Filtering offers by input: {}", input);
-            offerPage = offerRepository.findByFilter(input.trim(), pageable);
+            offerPage = offerRepository.findByFilter(input.trim(), pageable, showActive);
         }
 
         List<OfferDTO> offersList = offerPage.getContent()

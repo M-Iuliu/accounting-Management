@@ -48,9 +48,10 @@ public class OfferController {
     @GetMapping()
     public ResponseEntity<?> getOffers(@RequestParam(required = false) String input,
                                        @RequestParam(defaultValue = "0") int page,
-                                       @RequestParam(defaultValue = "5") int size) {
+                                       @RequestParam(defaultValue = "5") int size,
+                                       @RequestParam(defaultValue = "false") boolean active) {
         try {
-            PageDTO offersWithPagination = offerService.getOffers(input, page, size);
+            PageDTO offersWithPagination = offerService.getOffers(input, page, size, active);
             return ResponseEntity.ok(offersWithPagination);
         } catch (EntityNotFoundException e) {
             return ResponseEntity

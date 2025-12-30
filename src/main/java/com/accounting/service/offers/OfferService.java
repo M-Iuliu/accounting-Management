@@ -16,7 +16,7 @@ public interface OfferService {
 
     OfferDTO getOfferDTOById(Long id);
 
-    PageDTO getOffers(String input, int page, int size);
+    PageDTO getOffers(String input, int page, int size, boolean showActive);
 
     OfferDTO patchOffer(Long id, OfferPatchDTO patchDTO);
 

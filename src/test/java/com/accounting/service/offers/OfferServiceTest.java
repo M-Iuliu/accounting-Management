@@ -219,19 +219,19 @@ class OfferServiceTest {
         Pageable pageable = PageRequest.of(0, 10);
         Page<Offer> offerPage = new PageImpl<>(List.of(testOffer), pageable, 1);
 
-        when(offerRepository.findAllActiveOffers(any(Pageable.class))).thenReturn(offerPage);
+        when(offerRepository.findAllActiveOffers(any(Pageable.class), Boolean.TRUE)).thenReturn(offerPage);
         when(offerServiceHelper.mapOfferToOfferDTO(testOffer)).thenReturn(testOfferDTO);
         when(clientService.mapToShortDto(testClient)).thenReturn(testClientShortDTO);
 
         // Act
-        PageDTO result = offerService.getOffers(null, 0, 10);
+        PageDTO result = offerService.getOffers(null, 0, 10, Boolean.TRUE);
 
         // Assert
         assertNotNull(result);
         assertNotNull(result.getItems());
         assertEquals(1, ((List<?>) result.getItems()).size());
-        verify(offerRepository, times(1)).findAllActiveOffers(any(Pageable.class));
-        verify(offerRepository, never()).findByFilter(anyString(), any(Pageable.class));
+        verify(offerRepository, times(1)).findAllActiveOffers(any(Pageable.class), Boolean.TRUE);
+        verify(offerRepository, never()).findByFilter(anyString(), any(Pageable.class), Boolean.TRUE);
     }
 
     @Test
@@ -240,19 +240,19 @@ class OfferServiceTest {
         Pageable pageable = PageRequest.of(0, 10);
         Page<Offer> offerPage = new PageImpl<>(List.of(testOffer), pageable, 1);
 
-        when(offerRepository.findByFilter(eq("John"), any(Pageable.class))).thenReturn(offerPage);
+        when(offerRepository.findByFilter(eq("John"), any(Pageable.class), Boolean.TRUE)).thenReturn(offerPage);
         when(offerServiceHelper.mapOfferToOfferDTO(testOffer)).thenReturn(testOfferDTO);
         when(clientService.mapToShortDto(testClient)).thenReturn(testClientShortDTO);
 
         // Act
-        PageDTO result = offerService.getOffers("John", 0, 10);
+        PageDTO result = offerService.getOffers("John", 0, 10, Boolean.TRUE);
 
         // Assert
         assertNotNull(result);
         assertNotNull(result.getItems());
         assertEquals(1, ((List<?>) result.getItems()).size());
-        verify(offerRepository, times(1)).findByFilter(eq("John"), any(Pageable.class));
-        verify(offerRepository, never()).findAllActiveOffers(any(Pageable.class));
+        verify(offerRepository, times(1)).findByFilter(eq("John"), any(Pageable.class), Boolean.TRUE);
+        verify(offerRepository, never()).findAllActiveOffers(any(Pageable.class), Boolean.TRUE);
     }
 
     @Test
@@ -261,15 +261,15 @@ class OfferServiceTest {
         Pageable pageable = PageRequest.of(0, 10);
         Page<Offer> offerPage = new PageImpl<>(List.of(), pageable, 0);
 
-        when(offerRepository.findAllActiveOffers(any(Pageable.class))).thenReturn(offerPage);
+        when(offerRepository.findAllActiveOffers(any(Pageable.class), Boolean.TRUE)).thenReturn(offerPage);
 
         // Act
-        PageDTO result = offerService.getOffers("   ", 0, 10);
+        PageDTO result = offerService.getOffers("   ", 0, 10, Boolean.TRUE);
 
         // Assert
         assertNotNull(result);
-        verify(offerRepository, times(1)).findAllActiveOffers(any(Pageable.class));
-        verify(offerRepository, never()).findByFilter(anyString(), any(Pageable.class));
+        verify(offerRepository, times(1)).findAllActiveOffers(any(Pageable.class), Boolean.TRUE);
+        verify(offerRepository, never()).findByFilter(anyString(), any(Pageable.class), Boolean.TRUE);
     }
 
     @Test

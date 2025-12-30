@@ -127,7 +127,7 @@ class OfferControllerTest {
     @Test
     void testGetOffers_WithoutFilter_Success() throws Exception {
         // Arrange
-        when(offerService.getOffers(isNull(), eq(0), eq(5))).thenReturn(pageDTO);
+        when(offerService.getOffers(isNull(), eq(0), eq(5), Boolean.TRUE)).thenReturn(pageDTO);
 
         // Act & Assert
         mockMvc.perform(get("/offer")
@@ -138,13 +138,13 @@ class OfferControllerTest {
             .andExpect(jsonPath("$.items[0].destination").value("Paris"))
             .andExpect(jsonPath("$.pagination.totalElements").value(1));
 
-        verify(offerService, times(1)).getOffers(isNull(), eq(0), eq(5));
+        verify(offerService, times(1)).getOffers(isNull(), eq(0), eq(5), Boolean.TRUE);
     }
 
     @Test
     void testGetOffers_WithFilter_Success() throws Exception {
         // Arrange
-        when(offerService.getOffers(eq("John"), eq(0), eq(10))).thenReturn(pageDTO);
+        when(offerService.getOffers(eq("John"), eq(0), eq(10), Boolean.TRUE)).thenReturn(pageDTO);
 
         // Act & Assert
         mockMvc.perform(get("/offer")
@@ -154,19 +154,19 @@ class OfferControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.items", hasSize(1)));
 
-        verify(offerService, times(1)).getOffers(eq("John"), eq(0), eq(10));
+        verify(offerService, times(1)).getOffers(eq("John"), eq(0), eq(10), Boolean.TRUE);
     }
 
     @Test
     void testGetOffers_DefaultPagination_Success() throws Exception {
         // Arrange
-        when(offerService.getOffers(isNull(), eq(0), eq(5))).thenReturn(pageDTO);
+        when(offerService.getOffers(isNull(), eq(0), eq(5), Boolean.TRUE)).thenReturn(pageDTO);
 
         // Act & Assert - Should use default page=0, size=5
         mockMvc.perform(get("/offer"))
             .andExpect(status().isOk());
 
-        verify(offerService, times(1)).getOffers(isNull(), eq(0), eq(5));
+        verify(offerService, times(1)).getOffers(isNull(), eq(0), eq(5), Boolean.TRUE);
     }
 
     @Test
