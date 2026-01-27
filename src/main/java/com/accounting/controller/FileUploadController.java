@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Validated
 @RestController
-@RequestMapping("/files")
+@RequestMapping("/reservation/files")
 @RequiredArgsConstructor
 public class FileUploadController {
 
@@ -77,9 +77,9 @@ public class FileUploadController {
      * @param reservationId the reservation ID this file belongs to
      * @return the download URL for the uploaded file
      */
-    @PostMapping()
+    @PostMapping("/{reservationId}")
     public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file,
-                                              @RequestParam("reservationId") Long reservationId) {
+                                              @PathVariable("reservationId") Long reservationId) {
         log.info("File upload request - reservation ID: {}, filename: {}, size: {} bytes",
             reservationId, file.getOriginalFilename(), file.getSize());
 
