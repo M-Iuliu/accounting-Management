@@ -11,7 +11,7 @@ public class ProviderServiceHelper {
     public static Provider mapProviderForm(ProviderAddEditForm input) {
        Provider output = new Provider();
 
-        output.setProviderName(input.getProviderName() != null ? input.getProviderName() : null);
+        output.setProviderName(input.getName() != null ? input.getName() : null);
         output.setTelephone(input.getTelephone() != null ? input.getTelephone() : null);
         output.setEmail(input.getEmail() != null ? input.getEmail() : null);
         output.setWebLink(input.getWebLink() != null ? input.getWebLink() : null);
@@ -31,8 +31,8 @@ public class ProviderServiceHelper {
    }
 
     public static void updateProvider(ProviderAddEditForm updatedProvider, Provider existingProvider) {
-        if (updatedProvider.getProviderName() != null) {
-            existingProvider.setProviderName(updatedProvider.getProviderName());
+        if (updatedProvider.getName() != null) {
+            existingProvider.setProviderName(updatedProvider.getName());
         }
         if (updatedProvider.getTelephone() != null) {
             existingProvider.setTelephone(updatedProvider.getTelephone());

@@ -25,7 +25,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     );
 
 
-    @Query("SELECT n FROM Notification n WHERE n.updateDate = :targetDate AND n.notificationCategory = :notifType")
+    @Query("SELECT n FROM Notification n WHERE CAST(n.modifiedDate AS date) = :targetDate AND n.notificationCategory = :notifType")
     List<Notification> findNotificationToArchive(@Param("targetDate") LocalDate targetDate,
                                                  @Param("notifType") NotificationCategory notifType);
 

@@ -8,12 +8,16 @@ import com.accounting.exeption.ClientNotFoundException;
 import com.accounting.exeption.ErrorResponse;
 import com.accounting.service.clients.ClientService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.stream.Collectors;
 
 @Validated
 @RestController
@@ -43,12 +47,12 @@ public class ClientController {
     }
 
     @PostMapping()
-    public ResponseEntity<Client> saveClient(@RequestBody ClientAddEditForm client){
+    public ResponseEntity<Client> saveClient(@Valid @RequestBody ClientAddEditForm client){
         return ResponseEntity.status(HttpStatus.CREATED).body(clientService.saveClient(client));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editClient(@PathVariable Long id, @RequestBody ClientAddEditForm updateDto) {
+    public ResponseEntity<?> editClient(@PathVariable Long id, @Valid @RequestBody ClientAddEditForm updateDto) {
         try {
             ClientDTO updatedClient = clientService.editClient(id, updateDto);
             return ResponseEntity.ok(updatedClient);
@@ -79,6 +83,17 @@ public class ClientController {
                     .body(new ErrorResponse("Client not found", HttpStatus.NOT_FOUND.value()));
 
         }
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
+        String errorMessage = ex.getBindingResult().getFieldErrors().stream()
+            .map(error -> error.getField() + ": " + error.getDefaultMessage())
+            .collect(Collectors.joining(", "));
+
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(new ErrorResponse(errorMessage, HttpStatus.BAD_REQUEST.value()));
     }
 
 }

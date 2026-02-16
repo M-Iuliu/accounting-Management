@@ -3,36 +3,43 @@ package com.accounting.entity;
 import com.accounting.entity.enums.CommentType;
 import com.accounting.entity.enums.ContextType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
+/**
+ * Entity representing a comment on an offer, reservation, or notification.
+ * Supports both direct comments and replies to notifications.
+ */
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Comment {
+@EqualsAndHashCode(callSuper = false)
+public class Comment extends BaseAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "comment_id")
     private Long commentId;
 
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String message;
 
-    private Date date;
+    @Column(name = "date")
+    private LocalDateTime date;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "context_type", length = 50, nullable = false)
     private ContextType contextType;
-    // for which OFFER / RESERVATION / NOTIFICATION is this comment relevant
 
+    @Column(name = "context_id", nullable = false)
     private Long contextId;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "comment_type", length = 50, nullable = false)
     private CommentType commentType;
-    // if this is a reply comment to a NOTIFICATION ('notification')
-    // or if this is a comment of OFFER / RESERVATION ('direct')
 
+    @Column(name = "reply_to", columnDefinition = "TEXT")
     private String replyTo;
 }

@@ -16,7 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.stream.Collectors;
 
 
 @Validated
@@ -45,9 +48,10 @@ public class OfferController {
     @GetMapping()
     public ResponseEntity<?> getOffers(@RequestParam(required = false) String input,
                                        @RequestParam(defaultValue = "0") int page,
-                                       @RequestParam(defaultValue = "5") int size) {
+                                       @RequestParam(defaultValue = "5") int size,
+                                       @RequestParam(defaultValue = "false") boolean active) {
         try {
-            PageDTO offersWithPagination = offerService.getOffers(input, page, size);
+            PageDTO offersWithPagination = offerService.getOffers(input, page, size, active);
             return ResponseEntity.ok(offersWithPagination);
         } catch (EntityNotFoundException e) {
             return ResponseEntity
@@ -66,7 +70,7 @@ public class OfferController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> patchOffer(@PathVariable Long id, @RequestBody OfferPatchDTO patchDTO) {
+    public ResponseEntity<?> patchOffer(@PathVariable Long id, @Valid @RequestBody OfferPatchDTO patchDTO) {
         try {
             OfferDTO updatedOffer = offerService.patchOffer(id, patchDTO);
             return ResponseEntity.ok(updatedOffer);
@@ -114,6 +118,17 @@ public class OfferController {
                     .status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("Offer not found", HttpStatus.NOT_FOUND.value()));
         }
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
+        String errorMessage = ex.getBindingResult().getFieldErrors().stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .collect(Collectors.joining(", "));
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(errorMessage, HttpStatus.BAD_REQUEST.value()));
     }
 
 }

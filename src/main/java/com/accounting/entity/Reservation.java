@@ -2,9 +2,7 @@ package com.accounting.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,10 +13,13 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Reservation {
+@ToString(exclude = {"client", "offer", "provider", "participants", "uploadedFiles"})
+@EqualsAndHashCode(callSuper = false)
+public class Reservation extends BaseAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "reservation_id")
     private Long reservationId;
 
     @ManyToOne
@@ -34,33 +35,58 @@ public class Reservation {
 //    orphanRemoval = true removes participants if they're removed from the list.
     @JsonIgnore
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ReservationParticipant> participants = new ArrayList<>(); //editable
+    private List<ReservationParticipant> participants = new ArrayList<>();
 
+    @Column(name = "booking_ref", length = 255)
     private String bookingRef;
+
+    @Column(name = "booked_date")
     private LocalDate bookedDate;
 
-    private LocalDate departureDate;//editable
-    private LocalDate returnDate;//editable
+    @Column(name = "departure_date")
+    private LocalDate departureDate;
 
-    private String destination;//editable
-    private String hotel;//editable
-    private int roomNo;//editable
-    private String transport; //editable TODO: enum ?//editable
+    @Column(name = "return_date")
+    private LocalDate returnDate;
 
-    private double price;//editable
-    private double receipted;//editable
-    private double balance;//editable
-    private LocalDate paymentDueDate;//editable
-    private String currency;//editable
+    @Column(length = 255)
+    private String destination;
+
+    @Column(length = 255)
+    private String hotel;
+
+    @Column(name = "room_no")
+    private int roomNo;
+
+    @Column(length = 100)
+    private String transport;
+
+    @Column(nullable = false)
+    private double price;
+
+    @Column(nullable = false)
+    private double receipted;
+
+    @Column(nullable = false)
+    private double balance;
+
+    @Column(name = "payment_due_date")
+    private LocalDate paymentDueDate;
+
+    @Column(length = 10)
+    private String currency;
 
     @ManyToOne
     @JoinColumn(name = "provider_id", nullable = false)
-    private Provider provider;//editable
+    private Provider provider;
 
     @JsonIgnore
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReservationFile> uploadedFiles;
 
+    @Column(name = "is_deleted")
     private Boolean isDeleted;
-    private Date deletionDate; //TODO: to add Auditable to all classes
+
+    @Column(name = "deletion_date")
+    private Date deletionDate;
 }
