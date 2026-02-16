@@ -32,10 +32,6 @@ public class ReservationForm {
     @NotNull(message = "Return date is required")
     private LocalDate returnDate;
 
-    @Min(value = 1, message = "Number of persons must be at least 1")
-    @Max(value = 50, message = "Number of persons cannot exceed 50")
-    private int personsNumber;
-
     @Min(value = 1, message = "Number of rooms must be at least 1")
     @Max(value = 20, message = "Number of rooms cannot exceed 20")
     private int roomNo;

@@ -93,7 +93,6 @@ class ReservationControllerTest {
         testReservationForm.setParticipants(List.of(participant1, participant2));
         testReservationForm.setDepartureDate(LocalDate.now().plusDays(30));
         testReservationForm.setReturnDate(LocalDate.now().plusDays(37));
-        testReservationForm.setPersonsNumber(2);
         testReservationForm.setRoomNo(2);
         testReservationForm.setDestination("Paris");
         testReservationForm.setHotel("Hotel Paris");
