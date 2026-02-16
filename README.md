@@ -91,3 +91,12 @@ ClientController (Example):
 | `DELETE` | `/deleteClient/{id}` | Delete a client |
 
 Similarly, the ReservationController, ProviderController, and OfferController follow the same structure.
+
+## 5. OAuth (KeyCloack container)
+
+```
+ docker run -p 8081:8080 \
+  -e KEYCLOAK_ADMIN=admin \
+  -e KEYCLOAK_ADMIN_PASSWORD=admin \
+  quay.io/keycloak/keycloak:latest start-dev
+ ```
